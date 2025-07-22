@@ -79,9 +79,9 @@ class Logger2:
 
     def shouldPrintMessage(self, timestamp, message) :
         '''
-        1.Redis TTL 判断
-        2. 时间轮
-        3. 滑动窗口更新
+        1. Redis TTL 判断
+        2. 时间轮 ==>  wheel = [set()] * 10
+        3. 滑动窗口更新 ==> window = [left, right] + d[message]
         '''
         pass
 
