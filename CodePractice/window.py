@@ -109,6 +109,34 @@ class Solution():
         return res
 
 
+def minWindow(s, t):
+    if not s or not t: return ""
+    need = collections.Counter(t)
+    start = 0
+    min_len = float('inf')
+    l = r = valid = 0
+    window = collections.defaultdict(int)
+
+    while r < len(s):
+        c = s[r]
+        r += 1
+        window[c] += 1
+        if window[c] == need[c]:
+            valid += 1
+
+        while valid == len(need):
+            if r - l < min_len:
+                start = l
+                min_len = r - l
+
+            d = s[l]
+            if window[d] == need[d]:
+                valid -= 1
+            window[d] -= 1
+            l += 1
+
+    return s[start: start+min_len] if min_len!=float('inf') else ""
+
 
 
 solv = Solution()

@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="377b12ea-f027-47a5-9a6f-1bfa851a02f5" name="Changes" comment="CountOfAtoms">
+      <change afterPath="$PROJECT_DIR$/CodePractice/BipartiteGraph.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CodePractice/MinimumWindowSubstring.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CodePractice/TaskManager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CodePractice/LongestConsecutiveSequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/CodePractice/LongestConsecutiveSequence.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CodePractice/window.py" beforeDir="false" afterPath="$PROJECT_DIR$/CodePractice/window.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,8 +42,13 @@
     &quot;last_opened_file_path&quot;: &quot;/Users/mac-guest1/Downloads/Git/Interview&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.CountOfAtoms">
-    <configuration name="CheckBinaryTree" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/CodePractice" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.TaskManager">
+    <configuration name="BipartiteGraph" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="yzcmfInterview" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -50,7 +60,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CodePractice/CheckBinaryTree.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CodePractice/BipartiteGraph.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -80,7 +90,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="LogRateLimiter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="LongestConsecutiveSequence" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="yzcmfInterview" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -92,7 +102,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CodePractice/LogRateLimiter.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CodePractice/LongestConsecutiveSequence.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -101,7 +111,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Permutations" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="TaskManager" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="yzcmfInterview" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -113,21 +123,36 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CodePractice/Permutations.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CodePractice/TaskManager.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in MinimumWindowSubstring.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="yzcmfInterview" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/CodePractice/MinimumWindowSubstring.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.TaskManager" />
+        <item itemvalue="Python.LongestConsecutiveSequence" />
+        <item itemvalue="Python tests.Python tests in MinimumWindowSubstring.py" />
+        <item itemvalue="Python.BipartiteGraph" />
         <item itemvalue="Python.CountOfAtoms" />
-        <item itemvalue="Python.CheckBinaryTree" />
-        <item itemvalue="Python.LogRateLimiter" />
-        <item itemvalue="Python.Permutations" />
       </list>
     </recent_temporary>
   </component>
