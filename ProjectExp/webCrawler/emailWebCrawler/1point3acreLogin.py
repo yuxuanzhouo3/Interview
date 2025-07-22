@@ -1,0 +1,1 @@
+# use login cookie to fetch all the blocked emails
