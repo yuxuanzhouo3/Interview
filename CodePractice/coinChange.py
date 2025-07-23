@@ -57,7 +57,7 @@ def coinChange(coins, amount):
     #             k += 1
 
 
-    # O(amount × C ) = O(C × amount)
+    # O(amount × C ) = O(C × amount) 完全背包
     for coin in coins: # for coin in coins[::-1] is the same
         for a in range(coin, amount + 1):
             dp[a] = min(dp[a], dp[a - coin] + 1)
