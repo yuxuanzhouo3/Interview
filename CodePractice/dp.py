@@ -25,7 +25,7 @@ def concept2():
 
 ```python
 for i in range(1, len(items) + 1):
-    for w in range(capacity, items[i-1].weight - 1, -1): # w=capacity only once;
+    for w in range(capacity, items[i-1].weight - 1, -1): # w=capacity only once; - only w=items[i-1].weight will update; the minium has 1 chance to update; the bigger one is not able to base on the smaller one to update
         dp[w] = max(dp[w], dp[w - items[i-1].weight] + items[i-1].value)
 ```
 
@@ -33,7 +33,7 @@ for i in range(1, len(items) + 1):
 
 ```python
 for i in range(1, len(items) + 1):
-    for w in range(items[i-1].weight, capacity + 1): # w=items[i-1].weight,  items[i-1].weight * 2, ... , items[i-1].weight * k
+    for w in range(items[i-1].weight, capacity + 1): # w=items[i-1].weight,  items[i-1].weight * 2, ... , items[i-1].weight * k... will update; because the later will update based on the previous
         dp[w] = max(dp[w], dp[w - items[i-1].weight] + items[i-1].value)
 ```
 
@@ -62,7 +62,9 @@ dp = [0] * (amount + 1)
 dp[0] = 1
 for coin in coins:
     for i in range(coin, amount + 1):
-        dp[i] += dp[i - coin]
+        dp[i] += dp[i-coin] #  possible ways of coins to form amount=i
+        dp[i] = min(dp[i], dp[i-coin] + 1) # min coins to use to form amount=i
+        dp[i] = max(dp[i], dp[i-coin] + 1) # max coins to use to form amount=i
 ```
 
 ### 📌 刷题路径
