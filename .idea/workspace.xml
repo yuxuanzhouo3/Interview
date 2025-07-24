@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="377b12ea-f027-47a5-9a6f-1bfa851a02f5" name="Changes" comment="dp - 完全背包">
-      <change afterPath="$PROJECT_DIR$/CodePractice/trie.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SystemPractice/OO.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SystemPractice/OO.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SystemPractice/system_design.md" afterDir="false" />
+    <list default="true" id="377b12ea-f027-47a5-9a6f-1bfa851a02f5" name="Changes" comment="OO">
+      <change afterPath="$PROJECT_DIR$/SystemPractice/engineering_oo_classes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,6 +40,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/SystemPractice" />
       <recent name="$PROJECT_DIR$/CodePractice" />
     </key>
   </component>
@@ -234,7 +232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1753244134774</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="OO">
+      <created>1753299435316</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1753299435316</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -246,6 +251,7 @@
     <MESSAGE value="next permuation" />
     <MESSAGE value="dp" />
     <MESSAGE value="dp - 完全背包" />
-    <option name="LAST_COMMIT_MESSAGE" value="dp - 完全背包" />
+    <MESSAGE value="OO" />
+    <option name="LAST_COMMIT_MESSAGE" value="OO" />
   </component>
 </project>
