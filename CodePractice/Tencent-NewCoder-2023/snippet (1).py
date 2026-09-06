@@ -33,15 +33,15 @@ nor nor ssr (q, q, p)
 ...
 nor nor nor ... ssr
 
-令 X = 第k次抽到 SSR 之前， 抽到i次普通装备
+令 X = 抽到 SSR 之前， 抽到i次普通装备
 P(Xi) = q^i * p
 EP = S( i * P(Xi) ) = i * p * q ^ i = p * (i*q^i)
-   = 0*q^0*p + 1*q^1*p + 2*q^2*p + q^3*p + ... k*q^k*p = p(1*q^1+2*q^2+...k*q^k)  = p * q / (1-q)^2 = pq / p**2 
+   = 0*q^0*p + 1*q^1*p + 2*q^2*p + q^3*p + ... i*q^i*p = p(1*q^1+2*q^2+...i*q^i)  = p * q / (1-q)^2 = pq / p**2 
    = q / p
-EP = S( i * P(Xi) ) = q / p =  n / k
+EP(抽到普通装备次数期望值) = S( i * P(Xi) ) = q / p =  n / k
 
-S(EP) =  1 * (n / k)  + 2 [k is left numbers of ssr, [1, m] ] 
-EXP = sum (2+n/k for k in range(1, m+1)) = 2*m + H(m) = 2*m + (1+1/2+...1/m-1+1/m)
+EP(抽到剩余k个SSR装备花费期望值) =  1 * (n / k)  + 2 [k is left numbers of ssr, [m，.. ,1] ] 
+S(EP') = sum (2+n/k for k in range(1, m+1)) = 2*m + H(m) = 2*m + (1+1/2+...1/m-1+1/m)
 
 '''
 
