@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="377b12ea-f027-47a5-9a6f-1bfa851a02f5" name="Changes" comment="OO">
-      <change afterPath="$PROJECT_DIR$/CodePractice/Monotonic.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CodePractice/Tencent-NewCoder-2023/snippet (2).py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CodePractice/HuaWei-NewCoder-2026-7/snippet.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CodePractice/Tencent-NewCoder-2023/snippet (3).py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CodePractice/graph.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CodePractice/Tencent-NewCoder-2023/snippet (1).py" beforeDir="false" afterPath="$PROJECT_DIR$/CodePractice/Tencent-NewCoder-2023/snippet (1).py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,12 +37,13 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "/Users/mac-guest1/PycharmProjects/Interview/CodePractice/Tencent-NewCoder-2023",
+    "last_opened_file_path": "/Users/mac-guest1/PycharmProjects/Interview/CodePractice/HuaWei-NewCoder-2026-7",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/CodePractice/HuaWei-NewCoder-2026-7" />
       <recent name="$PROJECT_DIR$/CodePractice/Tencent-NewCoder-2023" />
       <recent name="$PROJECT_DIR$/CodePractice/Alibaba-NewCoder-2023" />
     </key>
