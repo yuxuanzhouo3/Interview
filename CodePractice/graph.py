@@ -78,7 +78,7 @@ Graph Theory / Graph Algorithms
 │
 ├── 7. Cycle Detection（环检测）
 │   ├── Undirected
-│   │   ├── DFS/BFS
+│   │   ├── DFS/BFS -> TSP
 │   │   └── Union Find
 │   │
 │   └── Directed
@@ -96,6 +96,7 @@ Graph Theory / Graph Algorithms
 └── 9. Matching（匹配）
     ├── Bipartite Matching
     └── Hungarian / Hopcroft-Karp
+
 '''
 
 
@@ -801,39 +802,25 @@ def astar_grid(grid, start, target):
 # ------------------------------------------------------------
 
 def kruskal(n, edges):
-
     edges = sorted(
         edges,
         key=lambda x: x[2]
     )
-
     dsu = DSU(n)
-
     total = 0
-
     used = 0
-
     mst = []
-
     for u, v, w in edges:
-
         if dsu.union(u, v):
-
             total += w
-
             used += 1
-
             mst.append(
                 (u, v, w)
             )
-
             if used == n - 1:
                 break
-
     if used != n - 1:
-
         return None
-
     return total, mst
 
 
