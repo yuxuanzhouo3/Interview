@@ -1,22 +1,28 @@
 """
 LC 798. Smallest Rotation with Highest Score — Hard
-https://leetcode.com/problems/smallest-rotation-with-highest-score/
-Tags: array, prefix-sum
-Status: STUB — fill best solution
+Best: Diff of score changes — O(n)
 """
 
-from typing import List, Optional
+from typing import List
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 798."""
-        raise NotImplementedError("LC 798 stub")
+    def bestRotation(self, nums: List[int]) -> int:
+        n = len(nums)
+        change = [1] * n
+        for i, a in enumerate(nums):
+            # when k = (i - a + 1) % n, this index starts to lose the +1
+            change[(i - a + 1) % n] -= 1
+        for i in range(1, n):
+            change[i] += change[i - 1]
+        return change.index(max(change))
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 798 stub OK (no tests yet)")
+    s = Solution()
+    assert s.bestRotation([2, 3, 1, 4, 0]) == 3
+    assert s.bestRotation([1, 3, 0, 2, 4]) == 0
+    print("LC 798 OK")
 
 
 if __name__ == "__main__":

@@ -1,22 +1,34 @@
 """
 LC 1585. Check If String Is Transformable With Substring Sort Operations — Hard
 https://leetcode.com/problems/check-if-string-is-transformable-with-substring-sort-operations/
-Tags: string, greedy, sorting
-Status: STUB — fill best solution
+Best: Queues of indices — bubble sort intuition — O(n)
 """
 
-from typing import List, Optional
+from collections import deque
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1585."""
-        raise NotImplementedError("LC 1585 stub")
+    def isTransformable(self, s: str, t: str) -> bool:
+        pos = [deque() for _ in range(10)]
+        for i, ch in enumerate(s):
+            pos[int(ch)].append(i)
+        for ch in t:
+            d = int(ch)
+            if not pos[d]:
+                return False
+            idx = pos[d].popleft()
+            for smaller in range(d):
+                if pos[smaller] and pos[smaller][0] < idx:
+                    return False
+        return True
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1585 stub OK (no tests yet)")
+    s = Solution()
+    assert s.isTransformable("84532", "34852") is True
+    assert s.isTransformable("34521", "23415") is True
+    assert s.isTransformable("12345", "12435") is False
+    print("LC 1585 OK")
 
 
 if __name__ == "__main__":

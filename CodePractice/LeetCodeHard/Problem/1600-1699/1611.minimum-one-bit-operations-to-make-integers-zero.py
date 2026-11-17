@@ -1,22 +1,26 @@
 """
 LC 1611. Minimum One Bit Operations to Make Integers Zero — Hard
 https://leetcode.com/problems/minimum-one-bit-operations-to-make-integers-zero/
-Tags: math, dynamic-programming, bit-manipulation, recursion, memoization
-Status: STUB — fill best solution
+Best: Gray code reverse — f(n)=2^{msb+1}-1-f(n^(1<<msb)) — O(log n)
 """
-
-from typing import List, Optional
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1611."""
-        raise NotImplementedError("LC 1611 stub")
+    def minimumOneBitOperations(self, n: int) -> int:
+        def f(x: int) -> int:
+            if x == 0:
+                return 0
+            msb = x.bit_length() - 1
+            return (1 << (msb + 1)) - 1 - f(x ^ (1 << msb))
+
+        return f(n)
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1611 stub OK (no tests yet)")
+    s = Solution()
+    assert s.minimumOneBitOperations(3) == 2
+    assert s.minimumOneBitOperations(6) == 4
+    print("LC 1611 OK")
 
 
 if __name__ == "__main__":

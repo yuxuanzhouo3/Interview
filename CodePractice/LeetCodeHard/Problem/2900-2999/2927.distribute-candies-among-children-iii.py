@@ -1,23 +1,25 @@
 """
 LC 2927. Distribute Candies Among Children III — Hard
 https://leetcode.com/problems/distribute-candies-among-children-iii/
-Tags: math, combinatorics
-Status: STUB — fill best solution
+Best: Stars and bars + inclusion-exclusion — O(1)
 """
 
-from typing import List, Optional
-
-
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2927."""
-        raise NotImplementedError("LC 2927 stub")
+    def distributeCandies(self, n: int, limit: int) -> int:
+        def C2(x: int) -> int:
+            return x * (x - 1) // 2 if x >= 2 else 0
+
+        # x1+x2+x3=n, 0<=xi<=limit
+        return C2(n + 2) - 3 * C2(n - limit + 1) + 3 * C2(n - 2 * limit) - C2(n - 3 * limit - 1)
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2927 stub OK (no tests yet)")
+    s = Solution()
+    assert s.distributeCandies(5, 2) == 3
+    assert s.distributeCandies(3, 3) == 10
+    print("LC 2927 OK")
 
 
 if __name__ == "__main__":
     _test()
+

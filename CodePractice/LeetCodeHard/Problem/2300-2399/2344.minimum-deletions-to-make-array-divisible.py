@@ -1,22 +1,30 @@
 """
 LC 2344. Minimum Deletions to Make Array Divisible — Hard
 https://leetcode.com/problems/minimum-deletions-to-make-array-divisible/
-Tags: array, math, sorting, heap-priority-queue, number-theory, euclidean-algorithm, greatest-common-divisor
-Status: STUB — fill best solution
+Best: GCD of numsDivide + scan min divisor — O(n log A + m log A)
 """
 
-from typing import List, Optional
+from typing import List
+import math
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2344."""
-        raise NotImplementedError("LC 2344 stub")
+    def minOperations(self, nums: List[int], numsDivide: List[int]) -> int:
+        g = numsDivide[0]
+        for x in numsDivide[1:]:
+            g = math.gcd(g, x)
+        nums.sort()
+        for i, x in enumerate(nums):
+            if g % x == 0:
+                return i
+        return -1
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2344 stub OK (no tests yet)")
+    s = Solution()
+    assert s.minOperations([2, 3, 2, 4, 3], [9, 6, 9, 3, 15]) == 2
+    assert s.minOperations([4, 3, 6], [8, 2, 6, 10]) == -1
+    print("LC 2344 OK")
 
 
 if __name__ == "__main__":

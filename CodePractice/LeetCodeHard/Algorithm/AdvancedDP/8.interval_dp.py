@@ -1,13 +1,32 @@
 """
-AdvancedDP / 区间 DP（戳气球 / 矩阵链 / 石子合并）
-模板: 枚举 length → left → 分割点 k
-App: LC 312 / 1000 / 1039 / 664
-来源: CodePractice/dp.py §区间
+8. 区间 DP · 回文子序列 / 合并 / 戳气球 / 三角剖分
+对照: 灵茶山 DP 题单 §八
+App: LC 516 / 5 / 312 / 1000 / 1039 / 664 / 96 / 87
+合并自: interval_dp.py + subsequence_dp.longest_palindrome_subseq + counting_dp.num_trees + memo_dfs.is_scramble
+模板: f[i][j]；枚举 length → left → 分割点 k
 """
+
+from functools import lru_cache
+
+
+def longest_palindrome_subseq(s):
+    """最长回文子序列。LC 516。§8.1。"""
+    n = len(s)
+    dp = [[0] * n for _ in range(n)]
+    for i in range(n):
+        dp[i][i] = 1
+    for length in range(2, n + 1):
+        for i in range(n - length + 1):
+            j = i + length - 1
+            if s[i] == s[j]:
+                dp[i][j] = 2 if length == 2 else dp[i + 1][j - 1] + 2
+            else:
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1])
+    return dp[0][n - 1] if n else 0
 
 
 def burst_balloons(nums):
-    """戳气球最大硬币。LC 312。"""
+    """戳气球最大硬币。LC 312。开区间最后戳 k。"""
     a = [1] + list(nums) + [1]
     n = len(a)
     dp = [[0] * n for _ in range(n)]
@@ -23,8 +42,8 @@ def burst_balloons(nums):
 
 
 def matrix_chain(dims):
-    """矩阵链乘最少乘法。dims 长度 = 矩阵数+1。"""
-    n = len(dims) - 1  # n matrices
+    """矩阵链乘最少乘法。"""
+    n = len(dims) - 1
     dp = [[0] * n for _ in range(n)]
     for length in range(2, n + 1):
         for i in range(n - length + 1):
@@ -37,7 +56,7 @@ def matrix_chain(dims):
 
 
 def merge_stones_cost(stones):
-    """相邻两堆合并最少代价（每次合 2 堆）。"""
+    """相邻两堆合并最少代价。"""
     n = len(stones)
     if n <= 1:
         return 0
@@ -71,18 +90,51 @@ def min_score_triangulation(values):
     return dp[0][n - 1]
 
 
+def num_trees(n):
+    """不同 BST 个数 = Catalan。LC 96。区间思想。"""
+    dp = [0] * (n + 1)
+    dp[0] = 1
+    for nodes in range(1, n + 1):
+        for left in range(nodes):
+            dp[nodes] += dp[left] * dp[nodes - 1 - left]
+    return dp[n]
+
+
+def is_scramble(s1, s2):
+    """扰乱字符串。LC 87。区间 + 记忆化。"""
+
+    @lru_cache(None)
+    def dfs(a, b):
+        if a == b:
+            return True
+        if sorted(a) != sorted(b):
+            return False
+        n = len(a)
+        for i in range(1, n):
+            if dfs(a[:i], b[:i]) and dfs(a[i:], b[i:]):
+                return True
+            if dfs(a[:i], b[-i:]) and dfs(a[i:], b[:-i]):
+                return True
+        return False
+
+    return dfs(s1, s2)
+
+
 def _test():
+    assert longest_palindrome_subseq("bbbab") == 4
     assert burst_balloons([3, 1, 5, 8]) == 167
     assert matrix_chain([10, 30, 5, 60]) == 4500
-    assert merge_stones_cost([1, 2, 3, 4]) == 19  # (1+2)=3 → (3+3)=6 → (6+4)=10
+    assert merge_stones_cost([1, 2, 3, 4]) == 19
     assert min_score_triangulation([1, 2, 3]) == 6
-    print("interval_dp OK")
+    assert num_trees(3) == 5
+    assert is_scramble("great", "rgeat") is True
+    print("8.interval_dp OK")
 
 
 APPLICATION = """
-- 外层区间长度，保证转移时子区间已算完。
-- 戳气球：开区间 (left,right) 最后戳 k。
-- Hard 合并石子 K 堆：长度需满足 (len-1)%(K-1)==0。
+- 外层区间长度，保证子区间已算完。
+- 消除/匹配类: 性质2缩两端，性质3枚举偶数步分割点。
+- 博弈区间见 §14。
 """
 
 if __name__ == "__main__":

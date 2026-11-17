@@ -1,23 +1,72 @@
 """
 LC 3547. Maximum Sum of Edge Values in a Graph — Hard
 https://leetcode.com/problems/maximum-sum-of-edge-values-in-a-graph/
-Tags: math, greedy, graph
-Status: STUB — fill best solution
+Tags: Math, Greedy, Graph Theory
+Best: 最优解
 """
-
-from typing import List, Optional
-
+import collections
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3547."""
-        raise NotImplementedError("LC 3547 stub")
+  def maxScore(self, n: int, edges: list[list[int]]) -> int:
+    ans = 0
+    graph = [[] for _ in range(n)]
+    cycleSizes = []  # components where all nodes have degree 2
+    pathSizes = []  # components that are not cycleSizes
+    seen = set()
 
+    for u, v in edges:
+      graph[u].append(v)
+      graph[v].append(u)
+
+    for i in range(n):
+      if i in seen:
+        continue
+      component = self._getComponent(graph, i, seen)
+      if all(len(graph[u]) == 2 for u in component):
+        cycleSizes.append(len(component))
+      elif len(component) > 1:
+        pathSizes.append(len(component))
+
+    for cycleSize in cycleSizes:
+      ans += self._calculateScore(n - cycleSize + 1, n, True)
+      n -= cycleSize
+
+    for pathSize in sorted(pathSizes, reverse=True):
+      ans += self._calculateScore(n - pathSize + 1, n, False)
+      n -= pathSize
+
+    return ans
+
+  def _getComponent(
+      self,
+      graph: list[list[int]],
+      start: int,
+      seen: set[int],
+  ) -> list[int]:
+    component = [start]
+    seen.add(start)
+    for u in component:
+      for v in graph[u]:
+        if v in seen:
+          continue
+        component.append(v)
+        seen.add(v)
+    return component
+
+  def _calculateScore(self, left: int, right: int, isCycle: bool) -> int:
+    window = collections.deque([right, right])
+    score = 0
+    for value in range(right - 1, left - 1, -1):
+      windowValue = window.popleft()
+      score += windowValue * value
+      window.append(value)
+    return score + window[0] * window[1] * isCycle
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3547 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.maxScore(n=4, edges=[[0,1],[1,2],[2,3]]) == 23
+    assert s.maxScore(n=6, edges=[[0,3],[4,5],[2,0],[1,3],[2,4],[1,5]]) == 82
+    print("LC 3547 OK")
 
 if __name__ == "__main__":
     _test()

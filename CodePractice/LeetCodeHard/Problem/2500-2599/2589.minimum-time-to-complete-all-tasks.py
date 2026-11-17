@@ -1,22 +1,33 @@
 """
 LC 2589. Minimum Time to Complete All Tasks — Hard
 https://leetcode.com/problems/minimum-time-to-complete-all-tasks/
-Tags: array, binary-search, stack, greedy, sorting
-Status: STUB — fill best solution
+Best: Sort by end, greedy fill from right — O(nT) T≤2000
 """
 
-from typing import List, Optional
+from typing import List
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2589."""
-        raise NotImplementedError("LC 2589 stub")
+    def findMinimumTime(self, tasks: List[List[int]]) -> int:
+        tasks.sort(key=lambda x: x[1])
+        on = [False] * 2001
+        for start, end, duration in tasks:
+            have = sum(1 for t in range(start, end + 1) if on[t])
+            need = duration - have
+            t = end
+            while need > 0:
+                if not on[t]:
+                    on[t] = True
+                    need -= 1
+                t -= 1
+        return sum(on)
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2589 stub OK (no tests yet)")
+    s = Solution()
+    assert s.findMinimumTime([[2, 3, 1], [4, 5, 1], [1, 5, 2]]) == 2
+    assert s.findMinimumTime([[1, 3, 2], [2, 5, 3], [5, 6, 2]]) == 4
+    print("LC 2589 OK")
 
 
 if __name__ == "__main__":

@@ -1,23 +1,38 @@
 """
 LC 3420. Count Non-Decreasing Subarrays After K Operations — Hard
 https://leetcode.com/problems/count-non-decreasing-subarrays-after-k-operations/
-Tags: array, stack, segment-tree, queue, sliding-window, monotonic-stack, monotonic-queue
-Status: STUB — fill best solution
+Best: 方法一
 """
 
-from typing import List, Optional
-
+from collections import deque
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3420."""
-        raise NotImplementedError("LC 3420 stub")
-
+    def countNonDecreasingSubarrays(self, nums: list[int], k: int) -> int:
+        n = len(nums)
+        q = deque()
+        ans = 0
+        cost = 0
+        r = n - 1
+        for l in range(n - 1, -1, -1):
+            x = nums[l]
+            while q and nums[q[-1]] <= x:
+                s = q.pop()
+                end = q[-1] if q else r + 1
+                cost += (end - s) * (x - nums[s])
+            q.append(l)
+            while cost > k:
+                cost -= nums[q[0]] - nums[r]
+                if q[0] == r:
+                    q.popleft()
+                r -= 1
+            ans += r - l + 1
+        return ans
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3420 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.countNonDecreasingSubarrays(nums=[6, 3, 1, 2, 4, 4], k=7) == 17
+    assert s.countNonDecreasingSubarrays(nums=[6, 3, 1, 3, 6], k=4) == 12
+    print("LC 3420 OK")
 
 if __name__ == "__main__":
     _test()

@@ -1,23 +1,78 @@
 """
 LC 3585. Find Weighted Median Node in Tree — Hard
 https://leetcode.com/problems/find-weighted-median-node-in-tree/
-Tags: array, binary-search, dynamic-programming, bit-manipulation, tree, depth-first-search
-Status: STUB — fill best solution
+Best: 方法一：LCA + 倍增
 """
 
-from typing import List, Optional
-
+from collections import deque
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3585."""
-        raise NotImplementedError("LC 3585 stub")
-
+    def findMedian(
+        self, n: int, edges: list[list[int]], queries: list[list[int]]
+    ) -> list[int]:
+        m = n.bit_length()
+        g = [[] for _ in range(n)]
+        for u, v, w in edges:
+            g[u].append((v, w))
+            g[v].append((u, w))
+        f = [[0] * m for _ in range(n)]
+        p = [0] * n
+        depth = [0] * n
+        dist = [0] * n
+        q = deque([0])
+        while q:
+            i = q.popleft()
+            f[i][0] = p[i]
+            for j in range(1, m):
+                f[i][j] = f[f[i][j - 1]][j - 1]
+            for j, w in g[i]:
+                if j != p[i]:
+                    p[j] = i
+                    depth[j] = depth[i] + 1
+                    dist[j] = dist[i] + w
+                    q.append(j)
+        ans = []
+        for u, v in queries:
+            if u == v:
+                ans.append(u)
+                continue
+            x, y = u, v
+            if depth[x] < depth[y]:
+                x, y = y, x
+            for j in range(m - 1, -1, -1):
+                if depth[x] - depth[y] >= (1 << j):
+                    x = f[x][j]
+            for j in range(m - 1, -1, -1):
+                if f[x][j] != f[y][j]:
+                    x, y = f[x][j], f[y][j]
+            if x != y:
+                x = p[x]
+            w = dist[u] + dist[v] - 2 * dist[x]
+            if 2 * (dist[u] - dist[x]) >= w:
+                cur = u
+                for j in range(m - 1, -1, -1):
+                    k = f[cur][j]
+                    if depth[k] >= depth[x] and 2 * (dist[u] - dist[k]) < w:
+                        cur = k
+                ans.append(p[cur])
+            else:
+                cur = v
+                for j in range(m - 1, -1, -1):
+                    k = f[cur][j]
+                    if (
+                        depth[k] > depth[x]
+                        and 2 * (dist[u] + dist[k] - 2 * dist[x]) >= w
+                    ):
+                        cur = k
+                ans.append(cur)
+        return ans
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3585 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.findMedian(n=2, edges=[[0, 1, 7]], queries=[[1, 0], [0, 1]]) == [0, 1]
+    assert s.findMedian(n=3, edges=[[0, 1, 2], [2, 0, 4]], queries=[[0, 1], [2, 0], [1, 2]]) == [1, 0, 2]
+    assert s.findMedian(n=5, edges=[[0, 1, 2], [0, 2, 5], [1, 3, 1], [2, 4, 3]], queries=[[3, 4], [1, 2]]) == [2, 2]
+    print("LC 3585 OK")
 
 if __name__ == "__main__":
     _test()

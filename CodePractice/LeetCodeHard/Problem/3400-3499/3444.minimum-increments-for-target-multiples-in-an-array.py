@@ -1,23 +1,52 @@
 """
 LC 3444. Minimum Increments for Target Multiples in an Array — Hard
 https://leetcode.com/problems/minimum-increments-for-target-multiples-in-an-array/
-Tags: array, math, dynamic-programming, bit-manipulation, number-theory, bitmask
-Status: STUB — fill best solution
+Tags: Array, Math, Dynamic Programming, Bit Manipulation, Number Theory, Bitmask
+Best: 最优解
 """
-
-from typing import List, Optional
-
+import math
+import functools
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3444."""
-        raise NotImplementedError("LC 3444 stub")
+  def minimumIncrements(self, nums: list[int], target: list[int]) -> int:
+    maxMask = 1 << len(target)
+    maskToLcm = {}
 
+    for mask in range(1, maxMask):
+      subset = [num for i, num in enumerate(target) if mask >> i & 1]
+      maskToLcm[mask] = functools.reduce(math.lcm, subset, 1)
+
+    # dp[mask] := the minimum number of increments to make each number in the
+    # subset of target have at least one number that is a multiple in `num`,
+    # where `mask` is the bitmask of the subset of target
+    dp = [math.inf] * maxMask
+    dp[0] = 0
+
+    for num in nums:
+      # maskToCost := (mask, cost), where `mask` is the bitmask of the subset
+      # of target and `cost` is the minimum number of increments to make each
+      # number in the subset of target have at least one number that is a
+      # multiple in `num`
+      maskToCost = [
+          (mask, 0 if (remainder := num % lcm) == 0 else lcm - remainder) for mask,
+          lcm in maskToLcm.items()]
+      newDp = dp[:]
+      for prevMask in range(maxMask):
+        if dp[prevMask] == float('inf'):
+          continue
+        for mask, cost in maskToCost:
+          newMask = prevMask | mask
+          newDp[newMask] = min(newDp[newMask], dp[prevMask] + cost)
+      dp = newDp
+
+    return -1 if dp[-1] == math.inf else dp[-1]
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3444 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.minimumIncrements(nums=[1,2,3], target=[4]) == 1
+    assert s.minimumIncrements(nums=[8,4], target=[10,5]) == 2
+    assert s.minimumIncrements(nums=[7,9,10], target=[7]) == 0
+    print("LC 3444 OK")
 
 if __name__ == "__main__":
     _test()

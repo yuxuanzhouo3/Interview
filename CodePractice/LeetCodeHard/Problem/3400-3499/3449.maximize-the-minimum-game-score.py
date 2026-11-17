@@ -1,23 +1,49 @@
 """
 LC 3449. Maximize the Minimum Game Score — Hard
 https://leetcode.com/problems/maximize-the-minimum-game-score/
-Tags: array, binary-search, greedy
-Status: STUB — fill best solution
+Tags: Array, Binary Search, Greedy
+Best: 最优解
 """
 
-from typing import List, Optional
-
-
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3449."""
-        raise NotImplementedError("LC 3449 stub")
+  def maxScore(self, points: list[int], m: int) -> int:
+    def isPossible(minVal: int, m: int) -> bool:
+      """
+      Returns True if it is possible to achieve the maximum minimum value `x`
+      with `m` number of moves.
+      """
+      moves = 0
+      prevMoves = 0  # to track remaining moves from the previous point
+      for i, point in enumerate(points):
+        required = (minVal + point - 1) // point  # ceil(minVal / point)
+        required = max(0, required - prevMoves)
+        if required > 0:
+          moves += 2 * required - 1
+          prevMoves = required - 1
+        elif i + 1 < len(points):
+          moves += 1
+          prevMoves = 0
+        if moves > m:
+          return False
+      return True
 
+    l = 0
+    r = (m + 1) // 2 * points[0] + 1
+
+    while l < r:
+      mid = (l + r + 1) // 2
+      if isPossible(mid, m):
+        l = mid
+      else:
+        r = mid - 1
+
+    return l
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3449 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.maxScore(points=[2,4], m=3) == 4
+    assert s.maxScore(points=[1,2,3], m=5) == 2
+    print("LC 3449 OK")
 
 if __name__ == "__main__":
     _test()

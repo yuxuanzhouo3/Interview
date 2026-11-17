@@ -1,22 +1,64 @@
+from math import gcd
 """
 LC 4037. Maximum Valid Split Positions II — Hard
 https://leetcode.com/problems/maximum-valid-split-positions-ii/
-Tags: array, math, enumeration, number-theory
-Status: STUB — fill best solution
+Best: doocs/leetcode reference solution (verified on examples)
 """
 
-from typing import List, Optional
-
-
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 4037."""
-        raise NotImplementedError("LC 4037 stub")
+    def maxValidSplits(self, nums: list[int]) -> int:
+        n = len(nums)
 
+        def calc(arr):
+            m = len(arr)
+            pre = [0] * m
+            suf = [0] * m
+
+            pre[0] = arr[0]
+            for i in range(1, m):
+                pre[i] = gcd(pre[i - 1], arr[i])
+
+            suf[-1] = arr[-1]
+            for i in range(m - 2, -1, -1):
+                suf[i] = gcd(suf[i + 1], arr[i])
+
+            ans = 0
+            for i in range(m - 1):
+                if pre[i] == suf[i + 1]:
+                    ans += 1
+
+            return ans
+
+        def mark(arr):
+            pos = [False] * n
+            pos[0] = True
+            g = arr[0]
+
+            for i in range(1, n):
+                ng = gcd(g, arr[i])
+                pos[i] = ng != g
+                g = ng
+
+            return pos
+
+        pos1 = mark(nums)
+        pos2 = mark(nums[::-1])
+
+        ans = calc(nums)
+
+        for i in range(n):
+            if pos1[i] or pos2[n - 1 - i]:
+                arr = nums[:i] + nums[i + 1 :]
+                ans = max(ans, calc(arr))
+
+        return ans
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 4037 stub OK (no tests yet)")
+    s = Solution()
+    assert s.maxValidSplits([10,30,15,10]) == 2
+    assert s.maxValidSplits([2,10,14]) == 1
+    assert s.maxValidSplits([2,4]) == 0
+    print("LC 4037 OK")
 
 
 if __name__ == "__main__":

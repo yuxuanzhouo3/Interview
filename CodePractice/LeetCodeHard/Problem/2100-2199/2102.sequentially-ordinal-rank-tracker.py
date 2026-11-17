@@ -1,22 +1,41 @@
 """
 LC 2102. Sequentially Ordinal Rank Tracker — Hard
 https://leetcode.com/problems/sequentially-ordinal-rank-tracker/
-Tags: design, heap-priority-queue, data-stream, ordered-set
-Status: STUB — fill best solution
+Best: SortedList by (-score, name) — O(log n)
 """
 
-from typing import List, Optional
+from sortedcontainers import SortedList
 
 
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2102."""
-        raise NotImplementedError("LC 2102 stub")
+class SORTracker:
+    def __init__(self):
+        self.data = SortedList()
+        self.idx = 0
+
+    def add(self, name: str, score: int) -> None:
+        self.data.add((-score, name))
+
+    def get(self) -> str:
+        ans = self.data[self.idx][1]
+        self.idx += 1
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2102 stub OK (no tests yet)")
+    t = SORTracker()
+    t.add("bradford", 2)
+    t.add("branford", 3)
+    assert t.get() == "branford"
+    t.add("alps", 2)
+    assert t.get() == "alps"
+    t.add("orland", 2)
+    assert t.get() == "bradford"
+    t.add("orlando", 3)
+    assert t.get() == "bradford"
+    t.add("alpine", 2)
+    assert t.get() == "bradford"
+    assert t.get() == "orland"
+    print("LC 2102 OK")
 
 
 if __name__ == "__main__":

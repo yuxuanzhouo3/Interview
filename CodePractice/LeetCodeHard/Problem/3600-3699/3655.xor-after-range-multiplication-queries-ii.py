@@ -1,22 +1,69 @@
+import math
 """
 LC 3655. XOR After Range Multiplication Queries II — Hard
 https://leetcode.com/problems/xor-after-range-multiplication-queries-ii/
-Tags: array, divide-and-conquer, prefix-sum
-Status: STUB — fill best solution
+Best: doocs/leetcode reference solution (verified on examples)
 """
 
-from typing import List, Optional
-
-
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3655."""
-        raise NotImplementedError("LC 3655 stub")
+    def xorAfterQueries(self, nums: list[int], queries: list[list[int]]) -> int:
+        MOD = 1_000_000_007
+        n = len(nums)
+        B = int(math.isqrt(n)) + 1
 
+        # events[k][res] = list of (t, v)
+        events = [[[] for _ in range(k)] for k in range(B + 1)]
+
+        for l, r, k, v in queries:
+            if k > B:
+                for idx in range(l, r + 1, k):
+                    nums[idx] = nums[idx] * v % MOD
+            else:
+                res = l % k
+                t1 = (l - res) // k
+                t2 = (r - res) // k
+                events[k][res].append((t1, v))
+
+                if t2 + 1 <= (n - 1 - res) // k:
+                    invv = pow(v, MOD - 2, MOD)
+                    events[k][res].append((t2 + 1, invv))
+
+        for k in range(1, B + 1):
+            for res in range(k):
+                ev = events[k][res]
+                if not ev:
+                    continue
+
+                ev.sort()
+                comp = []
+                for t, val in ev:
+                    if comp and comp[-1][0] == t:
+                        comp[-1] = (t, comp[-1][1] * val % MOD)
+                    else:
+                        comp.append([t, val])
+
+                cur = 1
+                ptr = 0
+                t = 0
+                idx = res
+                while idx < n:
+                    while ptr < len(comp) and comp[ptr][0] == t:
+                        cur = cur * comp[ptr][1] % MOD
+                        ptr += 1
+                    nums[idx] = nums[idx] * cur % MOD
+                    idx += k
+                    t += 1
+
+        xr = 0
+        for x in nums:
+            xr ^= x
+        return xr
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3655 stub OK (no tests yet)")
+    s = Solution()
+    assert s.xorAfterQueries([1,1,1], [[0,2,1,4]]) == 4
+    assert s.xorAfterQueries([2,3,1,5,4], [[1,4,2,3],[0,2,1,2]]) == 31
+    print("LC 3655 OK")
 
 
 if __name__ == "__main__":

@@ -1,22 +1,51 @@
 """
 LC 3886. Sum of Sortable Integers — Hard
 https://leetcode.com/problems/sum-of-sortable-integers/
-Tags: array, math, sorting, enumeration
-Status: STUB — fill best solution
+Best: doocs/leetcode reference solution (verified on examples)
 """
-
-from typing import List, Optional
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3886."""
-        raise NotImplementedError("LC 3886 stub")
+    def sortableIntegers(self, nums: list[int]) -> int:
+        n = len(nums)
+        pref_max = [0] * (n + 1)
+        for i, x in enumerate(nums):
+            pref_max[i + 1] = max(pref_max[i], x)
+        suff_min = [10**9] * (n + 1)
+        for i in range(n - 1, -1, -1):
+            suff_min[i] = min(nums[i], suff_min[i + 1])
+        pref_drop = [0] * n
+        for i in range(1, n):
+            pref_drop[i] = pref_drop[i - 1] + (nums[i - 1] > nums[i])
 
+        def check(k: int) -> bool:
+            for start in range(0, n, k):
+                end = start + k - 1
+                drops = pref_drop[end] - pref_drop[start]
+                if nums[end] > nums[start]:
+                    drops += 1
+                if drops > 1 or pref_max[start] > suff_min[start]:
+                    return False
+            return True
+
+        ans = 0
+        i = 1
+        while i <= n // i:
+            if n % i == 0:
+                if check(i):
+                    ans += i
+                other = n // i
+                if i != other and check(other):
+                    ans += other
+            i += 1
+        return ans
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3886 stub OK (no tests yet)")
+    s = Solution()
+    assert s.sortableIntegers([3,1,2]) == 3
+    assert s.sortableIntegers([7,6,5]) == 0
+    assert s.sortableIntegers([5,8]) == 3
+    print("LC 3886 OK")
 
 
 if __name__ == "__main__":

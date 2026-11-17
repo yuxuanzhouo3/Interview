@@ -1,22 +1,40 @@
 """
 LC 2941. Maximum GCD-Sum of a Subarray — Hard
-https://leetcode.com/problems/maximum-gcd-sum-of-a-subarray/
-Tags: array, math, binary-search, number-theory, euclidean-algorithm, greatest-common-divisor
-Status: STUB — fill best solution
+Best: Sparse sparse table / stack of gcd segments — O(n log A)
 """
 
-from typing import List, Optional
+from typing import List
+import math
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2941."""
-        raise NotImplementedError("LC 2941 stub")
+    def maxGcdSum(self, nums: List[int], k: int) -> int:
+        n = len(nums)
+        pref = [0]
+        for x in nums:
+            pref.append(pref[-1] + x)
+        ans = 0
+        # segs: list of (left_index, gcd) for segments ending at i
+        segs = []
+        for i, x in enumerate(nums):
+            nsegs = [(i, x)]
+            for l, g in segs:
+                ng = math.gcd(g, x)
+                if nsegs[-1][1] == ng:
+                    nsegs[-1] = (l, ng)
+                else:
+                    nsegs.append((l, ng))
+            segs = nsegs
+            for l, g in segs:
+                if i - l + 1 >= k:
+                    ans = max(ans, g * (pref[i + 1] - pref[l]))
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2941 stub OK (no tests yet)")
+    s = Solution()
+    assert s.maxGcdSum([2, 1, 4, 4, 4, 2], 2) == 48
+    print("LC 2941 OK")
 
 
 if __name__ == "__main__":

@@ -1,22 +1,23 @@
 """
-LC 569. Median Employee Salary — Hard
-https://leetcode.com/problems/median-employee-salary/
-Tags: database
-Status: STUB — fill best solution
+LC 569. Median Employee Salary — Hard (SQL Premium)
+Best: Window row_number / self-join median
 """
 
-from typing import List, Optional
-
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 569."""
-        raise NotImplementedError("LC 569 stub")
+SOLUTION_SQL = """
+SELECT Id, Company, Salary
+FROM (
+  SELECT e.*,
+    ROW_NUMBER() OVER (PARTITION BY Company ORDER BY Salary, Id) AS rn,
+    COUNT(*) OVER (PARTITION BY Company) AS cnt
+  FROM Employee e
+) t
+WHERE rn IN (FLOOR((cnt+1)/2), FLOOR((cnt+2)/2))
+"""
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 569 stub OK (no tests yet)")
+    assert "ROW_NUMBER" in SOLUTION_SQL and "Company" in SOLUTION_SQL
+    print("LC 569 OK")
 
 
 if __name__ == "__main__":

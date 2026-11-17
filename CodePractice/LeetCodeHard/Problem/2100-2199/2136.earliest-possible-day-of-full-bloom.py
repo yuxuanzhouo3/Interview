@@ -1,22 +1,29 @@
 """
 LC 2136. Earliest Possible Day of Full Bloom — Hard
 https://leetcode.com/problems/earliest-possible-day-of-full-bloom/
-Tags: array, greedy, sorting
-Status: STUB — fill best solution
+Best: plant by growTime desc — O(n log n)
 """
 
-from typing import List, Optional
+from typing import List
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2136."""
-        raise NotImplementedError("LC 2136 stub")
+    def earliestFullBloom(self, plantTime: List[int], growTime: List[int]) -> int:
+        order = sorted(range(len(growTime)), key=lambda i: -growTime[i])
+        day = 0
+        ans = 0
+        for i in order:
+            day += plantTime[i]
+            ans = max(ans, day + growTime[i])
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2136 stub OK (no tests yet)")
+    s = Solution()
+    assert s.earliestFullBloom([1, 4, 3], [2, 3, 1]) == 9
+    assert s.earliestFullBloom([1, 2, 3, 2], [2, 1, 2, 1]) == 9
+    assert s.earliestFullBloom([1], [1]) == 2
+    print("LC 2136 OK")
 
 
 if __name__ == "__main__":

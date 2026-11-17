@@ -1,23 +1,30 @@
 """
 LC 3209. Number of Subarrays With AND Value of K — Hard
 https://leetcode.com/problems/number-of-subarrays-with-and-value-of-k/
-Tags: array, binary-search, bit-manipulation, segment-tree
-Status: STUB — fill best solution
+Best: 方法一：哈希表 + 枚举
 """
 
-from typing import List, Optional
-
+from collections import Counter
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3209."""
-        raise NotImplementedError("LC 3209 stub")
-
+    def countSubarrays(self, nums: list[int], k: int) -> int:
+        ans = 0
+        pre = Counter()
+        for x in nums:
+            cur = Counter()
+            for y, v in pre.items():
+                cur[x & y] += v
+            cur[x] += 1
+            ans += cur[k]
+            pre = cur
+        return ans
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3209 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.countSubarrays(nums=[1, 1, 1], k=1) == 6
+    assert s.countSubarrays(nums=[1, 1, 2], k=1) == 3
+    assert s.countSubarrays(nums=[1, 2, 3], k=2) == 2
+    print("LC 3209 OK")
 
 if __name__ == "__main__":
     _test()

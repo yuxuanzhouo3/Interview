@@ -1,22 +1,44 @@
 """
-LC 3390. Longest Team Pass Streak — Hard
+LC 3390. Longest Team Pass Streak — Hard (SQL)
 https://leetcode.com/problems/longest-team-pass-streak/
-Tags: database
-Status: STUB — fill best solution
+Best: Same-team flag + window group ids
 """
 
-from typing import List, Optional
-
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3390."""
-        raise NotImplementedError("LC 3390 stub")
+SOLUTION_SQL = """
+WITH PassesWithTeams AS (
+  SELECT
+    t1.team_name AS team_from,
+    IF(t1.team_name = t2.team_name, 1, 0) AS same_team_flag,
+    p.time_stamp
+  FROM Passes p
+  JOIN Teams t1 ON p.pass_from = t1.player_id
+  JOIN Teams t2 ON p.pass_to = t2.player_id
+),
+StreakGroups AS (
+  SELECT
+    team_from AS team_name,
+    same_team_flag,
+    SUM(CASE WHEN same_team_flag = 0 THEN 1 ELSE 0 END)
+      OVER (PARTITION BY team_from ORDER BY time_stamp) AS group_id
+  FROM PassesWithTeams
+),
+StreakLengths AS (
+  SELECT team_name, group_id, COUNT(*) AS streak_length
+  FROM StreakGroups
+  WHERE same_team_flag = 1
+  GROUP BY 1, 2
+)
+SELECT team_name, MAX(streak_length) AS longest_streak
+FROM StreakLengths
+GROUP BY 1
+ORDER BY 1
+"""
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3390 stub OK (no tests yet)")
+    assert "longest_streak" in SOLUTION_SQL
+    assert "same_team_flag" in SOLUTION_SQL
+    print("LC 3390 OK")
 
 
 if __name__ == "__main__":

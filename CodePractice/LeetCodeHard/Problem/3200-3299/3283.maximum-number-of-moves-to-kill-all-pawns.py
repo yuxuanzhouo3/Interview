@@ -1,23 +1,66 @@
 """
 LC 3283. Maximum Number of Moves to Kill All Pawns — Hard
 https://leetcode.com/problems/maximum-number-of-moves-to-kill-all-pawns/
-Tags: array, math, bit-manipulation, breadth-first-search, game-theory, bitmask
-Status: STUB — fill best solution
+Best: 方法一：BFS + 状态压缩 + 记忆化搜索
 """
 
-from typing import List, Optional
-
+from collections import deque
+from functools import cache
+from math import inf
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3283."""
-        raise NotImplementedError("LC 3283 stub")
+    def maxMoves(self, kx: int, ky: int, positions: list[list[int]]) -> int:
+        @cache
+        def dfs(last: int, state: int, k: int) -> int:
+            if state == 0:
+                return 0
+            if k:
+                res = 0
+                for i, (x, y) in enumerate(positions):
+                    if state >> i & 1:
+                        t = dfs(i, state ^ (1 << i), k ^ 1) + dist[last][x][y]
+                        if res < t:
+                            res = t
+                return res
+            else:
+                res = inf
+                for i, (x, y) in enumerate(positions):
+                    if state >> i & 1:
+                        t = dfs(i, state ^ (1 << i), k ^ 1) + dist[last][x][y]
+                        if res > t:
+                            res = t
+                return res
 
+        n = len(positions)
+        m = 50
+        dist = [[[-1] * m for _ in range(m)] for _ in range(n + 1)]
+        dx = [1, 1, 2, 2, -1, -1, -2, -2]
+        dy = [2, -2, 1, -1, 2, -2, 1, -1]
+        positions.append([kx, ky])
+        for i, (x, y) in enumerate(positions):
+            dist[i][x][y] = 0
+            q = deque([(x, y)])
+            step = 0
+            while q:
+                step += 1
+                for _ in range(len(q)):
+                    x1, y1 = q.popleft()
+                    for j in range(8):
+                        x2, y2 = x1 + dx[j], y1 + dy[j]
+                        if 0 <= x2 < m and 0 <= y2 < m and dist[i][x2][y2] == -1:
+                            dist[i][x2][y2] = step
+                            q.append((x2, y2))
+
+        ans = dfs(n, (1 << n) - 1, 1)
+        dfs.cache_clear()
+        return ans
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3283 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.maxMoves(kx=1, ky=1, positions=[[0, 0]]) == 4
+    assert s.maxMoves(kx=0, ky=2, positions=[[1, 1], [2, 2], [3, 3]]) == 8
+    assert s.maxMoves(kx=0, ky=0, positions=[[1, 2], [2, 4]]) == 3
+    print("LC 3283 OK")
 
 if __name__ == "__main__":
     _test()

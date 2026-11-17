@@ -1,22 +1,43 @@
 """
 LC 1755. Closest Subsequence Sum — Hard
 https://leetcode.com/problems/closest-subsequence-sum/
-Tags: array, two-pointers, dynamic-programming, bit-manipulation, meet-in-the-middle, sorting, bitmask
-Status: STUB — fill best solution
+Best: Meet in the middle — O(2^{n/2} n)
 """
 
-from typing import List, Optional
+from typing import List
+import bisect
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1755."""
-        raise NotImplementedError("LC 1755 stub")
+    def minAbsDifference(self, nums: List[int], goal: int) -> int:
+        n = len(nums)
+        mid = n // 2
+
+        def all_sums(arr):
+            res = {0}
+            for x in arr:
+                res |= {s + x for s in res}
+            return sorted(res)
+
+        left = all_sums(nums[:mid])
+        right = all_sums(nums[mid:])
+        ans = abs(goal)
+        for s in left:
+            t = goal - s
+            i = bisect.bisect_left(right, t)
+            if i < len(right):
+                ans = min(ans, abs(s + right[i] - goal))
+            if i:
+                ans = min(ans, abs(s + right[i - 1] - goal))
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1755 stub OK (no tests yet)")
+    s = Solution()
+    assert s.minAbsDifference([5, -7, 3, 5], 6) == 0
+    assert s.minAbsDifference([7, -9, 15, -2], -5) == 1
+    assert s.minAbsDifference([1, 2, 3], -7) == 7
+    print("LC 1755 OK")
 
 
 if __name__ == "__main__":

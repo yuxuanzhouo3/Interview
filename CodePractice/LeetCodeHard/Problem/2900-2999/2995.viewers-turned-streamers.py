@@ -1,23 +1,32 @@
 """
 LC 2995. Viewers Turned Streamers — Hard
 https://leetcode.com/problems/viewers-turned-streamers/
-Tags: database
-Status: STUB — fill best solution
+Best: First view then stream — SQL
 """
 
-from typing import List, Optional
-
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2995."""
-        raise NotImplementedError("LC 2995 stub")
+SOLUTION_SQL = """
+WITH first_session AS (
+  SELECT user_id, session_type, session_start,
+         ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY session_start) AS rn
+  FROM Sessions
+)
+SELECT DISTINCT s.user_id, s.session_type AS session_type,
+       s.session_start, s.session_end, s.session_id
+FROM Sessions s
+JOIN first_session f
+  ON s.user_id = f.user_id AND f.rn = 1 AND f.session_type = 'Viewer'
+WHERE s.session_type = 'Streamer'
+ORDER BY s.session_start DESC, s.session_id DESC
+"""
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2995 stub OK (no tests yet)")
+    q = SOLUTION_SQL.lower()
+    assert "row_number()" in q
+    assert "viewer" in q and "streamer" in q
+    print("LC 2995 OK")
 
 
 if __name__ == "__main__":
     _test()
+

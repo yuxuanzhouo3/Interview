@@ -1,22 +1,44 @@
 """
 LC 3802. Number of Ways to Paint Sheets — Hard
 https://leetcode.com/problems/number-of-ways-to-paint-sheets/
-Tags: —
-Status: STUB — fill best solution
+Best: kamyu104 reference solution (verified on examples)
 """
 
-from typing import List, Optional
+# Time:  O(mlogm)
+# Space: O(m)
 
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3802."""
-        raise NotImplementedError("LC 3802 stub")
-
+# sort, prefix sum, two pointers
+class Solution(object):
+    def numberOfWays(self, n, limit):
+        """
+        :type n: int
+        :type limit: List[int]
+        :rtype: int
+        """
+        MOD = 10**9+7
+        limit.sort()
+        suffix = [0]*(len(limit)+1)
+        for i in reversed(range(len(suffix)-1)):
+            limit[i] = min(limit[i], n-1)
+            suffix[i] = suffix[i+1]+limit[i]
+        result = j = 0
+        for i in reversed(range(len(limit))):
+            while j < len(limit):
+                if limit[i]+limit[j] >= n:
+                    break
+                j += 1
+            cnt = (limit[i]-n+1)*(len(limit)-j)+suffix[j]
+            if i >= j:
+                cnt -= limit[i]+limit[i]-n+1
+            result = (result+cnt)%MOD
+        return result
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3802 stub OK (no tests yet)")
+    s = Solution()
+    assert s.numberOfWays(n=4, limit=[3, 1, 2]) == 6
+    assert s.numberOfWays(n=3, limit=[1, 2]) == 2
+    assert s.numberOfWays(n=3, limit=[2, 2]) == 4
+    print("LC 3802 OK")
 
 
 if __name__ == "__main__":

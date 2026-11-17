@@ -1,22 +1,39 @@
 """
 LC 4027. Elevator Requests III — Hard
 https://leetcode.com/problems/elevator-requests-iii/
-Tags: array, dynamic-programming, bit-manipulation, sorting, bitmask
-Status: STUB — fill best solution
+Best: doocs/leetcode reference solution (verified on examples)
 """
 
-from typing import List, Optional
+from math import inf
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 4027."""
-        raise NotImplementedError("LC 4027 stub")
-
+    def elevatorRequests(self, n: int, start: int, requests: list[list[int]]) -> int:
+        m = len(requests)
+        f = [[0] * m for _ in range(1 << m)]
+        for i in range(1 << m):
+            for j in range(m):
+                if i >> j & 1:
+                    f[i][j] = inf
+                    i0 = i ^ (1 << j)
+                    if i0 == 0:
+                        d = abs(start - requests[j][1])
+                        f[i][j] = min(f[i][j], max(d, requests[j][0]))
+                    else:
+                        for j0 in range(m):
+                            if j0 != j and (i >> j0 & 1):
+                                d = abs(requests[j0][1] - requests[j][1])
+                                f[i][j] = min(
+                                    f[i][j], max(f[i0][j0] + d, requests[j][0])
+                                )
+        return min(f[(1 << m) - 1][j] for j in range(m))
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 4027 stub OK (no tests yet)")
+    s = Solution()
+    assert s.elevatorRequests(9, 0, [[0,8],[6,5]]) == 9
+    assert s.elevatorRequests(8, 5, [[1,7],[7,3]]) == 7
+    assert s.elevatorRequests(7, 3, [[0,5],[0,1],[6,3]]) == 8
+    print("LC 4027 OK")
 
 
 if __name__ == "__main__":

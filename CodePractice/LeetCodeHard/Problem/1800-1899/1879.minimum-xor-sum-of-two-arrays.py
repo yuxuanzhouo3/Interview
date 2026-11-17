@@ -1,23 +1,37 @@
 """
 LC 1879. Minimum XOR Sum of Two Arrays — Hard
 https://leetcode.com/problems/minimum-xor-sum-of-two-arrays/
-Tags: array, dynamic-programming, bit-manipulation, bitmask, hungarian-algorithm, bipartite-graph, successive-shortest-path-algorithm
-Status: STUB — fill best solution
+Best: Bitmask DP assign nums2 — O(n^2 2^n)
 """
 
-from typing import List, Optional
+
+from typing import List
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1879."""
-        raise NotImplementedError("LC 1879 stub")
+    def minimumXORSum(self, nums1: List[int], nums2: List[int]) -> int:
+        n = len(nums1)
+        INF = 10**18
+        dp = [INF] * (1 << n)
+        dp[0] = 0
+        for mask in range(1 << n):
+            i = bin(mask).count("1")
+            if i >= n:
+                continue
+            for j in range(n):
+                if mask & (1 << j) == 0:
+                    nm = mask | (1 << j)
+                    dp[nm] = min(dp[nm], dp[mask] + (nums1[i] ^ nums2[j]))
+        return dp[(1 << n) - 1]
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1879 stub OK (no tests yet)")
+    s = Solution()
+    assert s.minimumXORSum([1, 2], [2, 3]) == 2
+    assert s.minimumXORSum([1, 0, 3], [5, 3, 4]) == 8
+    print("LC 1879 OK")
 
 
 if __name__ == "__main__":
     _test()
+

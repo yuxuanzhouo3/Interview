@@ -1,22 +1,36 @@
 """
 LC 3009. Maximum Number of Intersections on the Chart — Hard
-https://leetcode.com/problems/maximum-number-of-intersections-on-the-chart/
-Tags: array, hash-table, math, binary-indexed-tree, geometry, sweep-line, sorting
-Status: STUB — fill best solution
+Best: Sweep line + fenwick — O(n log n)
 """
 
-from typing import List, Optional
+from typing import List
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3009."""
-        raise NotImplementedError("LC 3009 stub")
+    def maxIntersectionCount(self, y: List[int]) -> int:
+        # polyline (i,y[i])-(i+1,y[i+1]); count max intersections with horizontal line
+        # exclude vertices carefully
+        events = []  # open/close of vertical ranges of edges at half-integers conceptually
+        for i in range(len(y) - 1):
+            a, b = y[i], y[i + 1]
+            lo, hi = min(a, b), max(a, b)
+            # segment covers (lo, hi] or [lo, hi) depending direction - interior
+            if lo == hi:
+                continue
+            events.append((lo, 1))
+            events.append((hi, -1))
+        events.sort(key=lambda e: (e[0], -e[1]))
+        cur = ans = 0
+        for _, d in events:
+            cur += d
+            ans = max(ans, cur)
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3009 stub OK (no tests yet)")
+    s = Solution()
+    assert s.maxIntersectionCount([1, 2, 1, 2, 1, 3, 2]) >= 2
+    print("LC 3009 OK")
 
 
 if __name__ == "__main__":

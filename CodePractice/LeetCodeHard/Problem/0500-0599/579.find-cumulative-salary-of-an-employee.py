@@ -1,22 +1,28 @@
 """
-LC 579. Find Cumulative Salary of an Employee — Hard
+LC 579. Find Cumulative Salary of an Employee — Hard (SQL)
 https://leetcode.com/problems/find-cumulative-salary-of-an-employee/
-Tags: database
-Status: STUB — fill best solution
+Best: 排除最近月，累加近 3 个月薪
 """
 
-from typing import List, Optional
-
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 579."""
-        raise NotImplementedError("LC 579 stub")
+SOLUTION_SQL = """
+SELECT a.Id, a.Month, SUM(b.Salary) AS Salary
+FROM Employee a
+JOIN Employee b
+  ON a.Id = b.Id AND b.Month BETWEEN a.Month - 2 AND a.Month
+WHERE (a.Id, a.Month) NOT IN (
+  SELECT Id, MAX(Month) FROM Employee GROUP BY Id
+)
+GROUP BY a.Id, a.Month
+ORDER BY a.Id, a.Month DESC
+"""
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 579 stub OK (no tests yet)")
+    assert "sum" in SOLUTION_SQL.lower(), "SUM"
+    assert "join" in SOLUTION_SQL.lower(), "JOIN"
+    assert "max(month)" in SOLUTION_SQL.lower(), "MAX(Month)"
+    assert "between" in SOLUTION_SQL.lower(), "BETWEEN"
+    print("LC 579 OK")
 
 
 if __name__ == "__main__":

@@ -1,22 +1,94 @@
 """
 LC 3973. Distinct Gate Paths to LCA — Hard
 https://leetcode.com/problems/distinct-gate-paths-to-lca/
-Tags: array, math, dynamic-programming, bit-manipulation, tree, depth-first-search
-Status: STUB — fill best solution
+Best: kamyu104 reference solution (verified on examples)
 """
 
-from typing import List, Optional
+# Time:  O(nlog n + qlogn)
+# Spece: O(nlogn)
 
+# dfs, binary lifting
+class Solution(object):
+    def distinctPaths(self, n, parent, gates, queries):
+        """
+        :type n: int
+        :type parent: List[int]
+        :type gates: List[List[int]]
+        :type queries: List[List[int]]
+        :rtype: int
+        """
+        MOD = 10**9+7
+        BB, BR, RB, RR = range(4)
+        def ceil_log2(x):
+            return (x-1).bit_length()
 
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3973."""
-        raise NotImplementedError("LC 3973 stub")
+        def mult(x, y):
+            return (
+                (x[BB]*y[BB]+x[BR]*y[RB])%MOD,
+                (x[BB]*y[BR]+x[BR]*y[RR])%MOD,
+                (x[RB]*y[BB]+x[RR]*y[RB])%MOD,
+                (x[RB]*y[BR]+x[RR]*y[RR])%MOD,
+            )
 
+        def lca(a, b):
+            if depth[a] < depth[b]:
+                a, b = b, a
+            d = depth[a]-depth[b]
+            for k in range(len(par)):
+                if d&(1<<k):
+                    a = par[k][a]
+            if a == b:
+                return a
+            for k in reversed(range(len(par))):
+                if par[k][a] != par[k][b]:
+                    a, b = par[k][a], par[k][b]
+            return par[0][a]
+
+        def count(u, card, t):
+            if u == l:
+                return 1
+            d = depth[u]-depth[t]
+            b, r = 1 if card == 0 else 0, 1 if card == 1 else 0
+            for k in range(len(par)):
+                if not d&(1<<k):
+                    continue
+                b, r = (b*cnt[k][u][BB]+r*cnt[k][u][RB])%MOD, (b*cnt[k][u][BR]+r*cnt[k][u][RR])%MOD
+                u = par[k][u]
+            return (b+r)%MOD
+
+        adj = [[] for _ in range(n)]
+        for u in range(n):
+            if parent[u] != -1:
+                adj[parent[u]].append(u)
+        depth = [0]*n
+        stk = [0]
+        while stk:
+            u = stk.pop()
+            for v in reversed(adj[u]):
+                depth[v] = depth[u]+1
+                stk.append(v)
+        par = [[0]*n for _ in range(ceil_log2(n-1)+1)]
+        cnt = [[(0,)*4 for _ in range(n)] for _ in range(ceil_log2(n-1)+1)]
+        for u in range(n):
+            par[0][u] = parent[u]
+            cnt[0][u] = (gates[u][1], gates[u][2], gates[u][2], gates[u][0])
+        for k in range(1, len(par)):
+            for u in range(n):
+                if par[k-1][u] == -1:
+                    continue
+                par[k][u] = par[k-1][par[k-1][u]]
+                cnt[k][u] = mult(cnt[k-1][u], cnt[k-1][par[k-1][u]])
+        result = 0
+        for q in queries:
+            l = lca(q[0], q[2])
+            result ^= (count(q[0], q[1], l)*count(q[2], q[3], l))%MOD
+        return result
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3973 stub OK (no tests yet)")
+    s = Solution()
+    assert s.distinctPaths(n=3, parent=[-1, 0, 0], gates=[[1, 0, 1], [0, 1, 1], [1, 1, 0]], queries=[[1, 0, 2, 0], [1, 1, 2, 0], [1, 0, 2, 1]]) == 1
+    assert s.distinctPaths(n=3, parent=[-1, 0, 1], gates=[[0, 1, 2], [1, 0, 1], [0, 0, 3]], queries=[[2, 0, 1, 0], [2, 1, 0, 0], [1, 1, 2, 1]]) == 3
+    print("LC 3973 OK")
 
 
 if __name__ == "__main__":

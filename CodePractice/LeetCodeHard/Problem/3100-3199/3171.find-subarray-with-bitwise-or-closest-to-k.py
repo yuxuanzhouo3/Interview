@@ -1,22 +1,34 @@
 """
 LC 3171. Find Subarray With Bitwise OR Closest to K — Hard
 https://leetcode.com/problems/find-subarray-with-bitwise-or-closest-to-k/
-Tags: array, binary-search, bit-manipulation, segment-tree
-Status: STUB — fill best solution
+Best: Maintain OR-suffix sets (at most 32) — O(n * 32)
 """
 
-from typing import List, Optional
+from typing import List
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3171."""
-        raise NotImplementedError("LC 3171 stub")
+    def minimumDifference(self, nums: List[int], k: int) -> int:
+        ans = abs(nums[0] - k)
+        prev = {nums[0]}
+        for x in nums[1:]:
+            cur = {x}
+            for p in prev:
+                cur.add(p | x)
+            for v in cur:
+                ans = min(ans, abs(v - k))
+            prev = cur
+            if ans == 0:
+                return 0
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3171 stub OK (no tests yet)")
+    s = Solution()
+    assert s.minimumDifference([1, 2, 4, 5], 3) == 0
+    assert s.minimumDifference([1, 3, 1, 3], 2) == 1
+    assert s.minimumDifference([1], 10) == 9
+    print("LC 3171 OK")
 
 
 if __name__ == "__main__":

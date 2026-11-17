@@ -1,23 +1,58 @@
 """
 LC 3327. Check if DFS Strings Are Palindromes — Hard
 https://leetcode.com/problems/check-if-dfs-strings-are-palindromes/
-Tags: array, hash-table, string, tree, depth-first-search, hash-function
-Status: STUB — fill best solution
+Best: 方法一：DFS + 字符串哈希
 """
 
-from typing import List, Optional
+class Hashing:
+    __slots__ = ["mod", "h", "p"]
 
+    def __init__(self, s: list[str], base: int, mod: int):
+        self.mod = mod
+        self.h = [0] * (len(s) + 1)
+        self.p = [1] * (len(s) + 1)
+        for i in range(1, len(s) + 1):
+            self.h[i] = (self.h[i - 1] * base + ord(s[i - 1])) % mod
+            self.p[i] = (self.p[i - 1] * base) % mod
+
+    def query(self, l: int, r: int) -> int:
+        return (self.h[r] - self.h[l - 1] * self.p[r - l + 1]) % self.mod
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3327."""
-        raise NotImplementedError("LC 3327 stub")
+    def findAnswer(self, parent: list[int], s: str) -> list[bool]:
+        def dfs(i: int):
+            l = len(dfsStr) + 1
+            for j in g[i]:
+                dfs(j)
+            dfsStr.append(s[i])
+            r = len(dfsStr)
+            pos[i] = (l, r)
 
+        n = len(s)
+        g = [[] for _ in range(n)]
+        for i in range(1, n):
+            g[parent[i]].append(i)
+        dfsStr = []
+        pos = {}
+        dfs(0)
+
+        base, mod = 13331, 998244353
+        h1 = Hashing(dfsStr, base, mod)
+        h2 = Hashing(dfsStr[::-1], base, mod)
+        ans = []
+        for i in range(n):
+            l, r = pos[i]
+            k = r - l + 1
+            v1 = h1.query(l, l + k // 2 - 1)
+            v2 = h2.query(n - r + 1, n - r + 1 + k // 2 - 1)
+            ans.append(v1 == v2)
+        return ans
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3327 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.findAnswer(parent=[-1, 0, 0, 1, 1, 2], s='aababa') == [True, True, False, True, True, True]
+    assert s.findAnswer(parent=[-1, 0, 0, 0, 0], s='aabcb') == [True, True, True, True, True]
+    print("LC 3327 OK")
 
 if __name__ == "__main__":
     _test()

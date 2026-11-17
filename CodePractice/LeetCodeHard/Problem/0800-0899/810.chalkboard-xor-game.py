@@ -1,22 +1,23 @@
 """
 LC 810. Chalkboard XOR Game — Hard
-https://leetcode.com/problems/chalkboard-xor-game/
-Tags: array, math, bit-manipulation, brainteaser, game-theory, zero-sum-game, impartial-game
-Status: STUB — fill best solution
+Best: Math — win iff xor==0 or n even — O(n)
 """
 
-from typing import List, Optional
+from typing import List
+from functools import reduce
+import operator
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 810."""
-        raise NotImplementedError("LC 810 stub")
+    def xorGame(self, nums: List[int]) -> bool:
+        return reduce(operator.xor, nums) == 0 or len(nums) % 2 == 0
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 810 stub OK (no tests yet)")
+    s = Solution()
+    assert s.xorGame([1, 1, 2]) is False
+    assert s.xorGame([0, 1]) is True
+    print("LC 810 OK")
 
 
 if __name__ == "__main__":

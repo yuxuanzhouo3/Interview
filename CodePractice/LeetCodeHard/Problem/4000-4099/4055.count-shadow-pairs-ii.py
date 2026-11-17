@@ -1,22 +1,63 @@
 """
 LC 4055. Count Shadow Pairs II — Hard
 https://leetcode.com/problems/count-shadow-pairs-ii/
-Tags: array, binary-search, divide-and-conquer, stack, binary-indexed-tree, segment-tree, sorting, monotonic-stack
-Status: STUB — fill best solution
+Best: kamyu104 reference solution (verified on examples)
 """
 
-from typing import List, Optional
+# Time:  O(nlogn)
+# Space: O(n)
 
+# coordinate compression, merge sort, mono stack
+class Solution(object):
+    def shadowPairs(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        def merge_and_count(left, right):
+            merged, cnt = [], 0
+            stk1, stk2 = [], []
+            i = 0
+            for idx in right:
+                while i < len(left) and left[i] < idx:
+                    while stk1 and stk1[-1] < nums[left[i]]:
+                        stk1.pop()
+                    if stk2:
+                        stk2[-1][1] = min(stk2[-1][1], len(stk1))
+                    stk1.append(nums[left[i]])
+                    merged.append(left[i])
+                    i += 1
+                while stk2 and stk2[-1][0] >= nums[idx]:
+                    base = stk2.pop()[1]
+                    if stk2:
+                        stk2[-1][1] = min(stk2[-1][1], base)
+                cnt += len(stk1)-(stk2[-1][1] if stk2 else 0)
+                stk2.append([nums[idx], len(stk1)])
+                merged.append(idx)
+            merged.extend(left[i] for i in range(i, len(left)))
+            return merged, cnt
 
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 4055."""
-        raise NotImplementedError("LC 4055 stub")
-
+        val_to_idx = {x:i for i, x in enumerate(sorted(set(nums)))}
+        groups = [[] for _ in range(len(val_to_idx))]
+        for i, x in enumerate(nums):
+            groups[val_to_idx[x]].append(i)
+        result = 0
+        while len(groups) != 1:
+            new_groups = []
+            for i in range(0, len(groups)-1, 2):
+                merged, cnt = merge_and_count(groups[i], groups[i+1])
+                result += cnt
+                new_groups.append(merged)
+            if len(groups)%2:
+                new_groups.append(groups[-1])
+            groups = new_groups
+        return result
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 4055 stub OK (no tests yet)")
+    s = Solution()
+    assert s.shadowPairs(nums=[3, 1, 4, 2, 5]) == 5
+    assert s.shadowPairs(nums=[6, 7, 8, 9]) == 3
+    print("LC 4055 OK")
 
 
 if __name__ == "__main__":

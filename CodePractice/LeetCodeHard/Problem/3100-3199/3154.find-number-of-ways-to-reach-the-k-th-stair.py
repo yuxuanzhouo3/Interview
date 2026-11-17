@@ -1,22 +1,29 @@
 """
 LC 3154. Find Number of Ways to Reach the K-th Stair — Hard
 https://leetcode.com/problems/find-number-of-ways-to-reach-the-k-th-stair/
-Tags: math, dynamic-programming, bit-manipulation, memoization, combinatorics
-Status: STUB — fill best solution
+Best: Enumerate jump count + combinatorics — O(log k)
 """
 
-from typing import List, Optional
+from math import comb
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3154."""
-        raise NotImplementedError("LC 3154 stub")
+    def waysToReachStair(self, k: int) -> int:
+        # start at 1; j jumps add 2^0+...+2^{j-1}=2^j-1 → position 2^j
+        ans = 0
+        for j in range(31):
+            pos = 1 << j
+            downs = pos - k
+            if 0 <= downs <= j + 1:
+                ans += comb(j + 1, downs)
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3154 stub OK (no tests yet)")
+    s = Solution()
+    assert s.waysToReachStair(0) == 2
+    assert s.waysToReachStair(1) == 4
+    print("LC 3154 OK")
 
 
 if __name__ == "__main__":

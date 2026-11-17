@@ -1,22 +1,30 @@
 """
 LC 1510. Stone Game IV — Hard
 https://leetcode.com/problems/stone-game-iv/
-Tags: math, dynamic-programming, minimax-algorithm, game-theory, nim-game, sprague-grundy-theorem, zero-sum-game
-Status: STUB — fill best solution
+Best: DP win/lose — O(n √n)
 """
-
-from typing import List, Optional
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1510."""
-        raise NotImplementedError("LC 1510 stub")
+    def winnerSquareGame(self, n: int) -> bool:
+        dp = [False] * (n + 1)
+        for i in range(1, n + 1):
+            x = 1
+            while x * x <= i:
+                if not dp[i - x * x]:
+                    dp[i] = True
+                    break
+                x += 1
+        return dp[n]
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1510 stub OK (no tests yet)")
+    s = Solution()
+    assert s.winnerSquareGame(1) is True
+    assert s.winnerSquareGame(2) is False
+    assert s.winnerSquareGame(4) is True
+    assert s.winnerSquareGame(7) is False
+    print("LC 1510 OK")
 
 
 if __name__ == "__main__":

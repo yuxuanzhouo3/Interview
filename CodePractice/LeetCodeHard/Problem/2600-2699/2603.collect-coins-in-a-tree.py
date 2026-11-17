@@ -1,23 +1,41 @@
 """
 LC 2603. Collect Coins in a Tree — Hard
 https://leetcode.com/problems/collect-coins-in-a-tree/
-Tags: array, tree, graph, topological-sort
-Status: STUB — fill best solution
+Best: Trim zero-coin leaves then 2 layers — O(n)
 """
 
-from typing import List, Optional
-
+from collections import defaultdict, deque
+from typing import List
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2603."""
-        raise NotImplementedError("LC 2603 stub")
-
+    def collectTheCoins(self, coins: List[int], edges: List[List[int]]) -> int:
+        g = defaultdict(set)
+        for a, b in edges:
+            g[a].add(b)
+            g[b].add(a)
+        n = len(coins)
+        q = deque(i for i in range(n) if len(g[i]) == 1 and coins[i] == 0)
+        while q:
+            i = q.popleft()
+            for j in list(g[i]):
+                g[j].remove(i)
+                if coins[j] == 0 and len(g[j]) == 1:
+                    q.append(j)
+            g[i].clear()
+        for _ in range(2):
+            leaves = [i for i in range(n) if len(g[i]) == 1]
+            for i in leaves:
+                for j in list(g[i]):
+                    g[j].remove(i)
+                g[i].clear()
+        return sum(len(g[a]) > 0 and len(g[b]) > 0 for a, b in edges) * 2
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2603 stub OK (no tests yet)")
 
+    s = Solution()
+    assert s.collectTheCoins([1, 0, 0, 0, 0, 1], [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]]) == 2
+    assert s.collectTheCoins([0, 0, 0, 1, 1, 0, 0, 1], [[0, 1], [0, 2], [1, 3], [1, 4], [2, 5], [5, 6], [5, 7]]) == 2
+    print("LC 2603 OK")
 
 if __name__ == "__main__":
     _test()

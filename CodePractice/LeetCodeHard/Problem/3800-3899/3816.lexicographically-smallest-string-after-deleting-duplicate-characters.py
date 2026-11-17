@@ -1,22 +1,29 @@
 """
 LC 3816. Lexicographically Smallest String After Deleting Duplicate Characters — Hard
 https://leetcode.com/problems/lexicographically-smallest-string-after-deleting-duplicate-characters/
-Tags: hash-table, string, stack, greedy, monotonic-stack
-Status: STUB — fill best solution
+Best: doocs/leetcode reference solution (verified on examples)
 """
 
-from typing import List, Optional
+from collections import defaultdict, Counter
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3816."""
-        raise NotImplementedError("LC 3816 stub")
-
+    def lexSmallestAfterDeletion(self, s: str) -> str:
+        cnt = Counter(s)
+        stk = []
+        for c in s:
+            while stk and stk[-1] > c and cnt[stk[-1]] > 1:
+                cnt[stk.pop()] -= 1
+            stk.append(c)
+        while stk and cnt[stk[-1]] > 1:
+            cnt[stk.pop()] -= 1
+        return "".join(stk)
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3816 stub OK (no tests yet)")
+    s = Solution()
+    assert s.lexSmallestAfterDeletion("aaccb") == "aacb"
+    assert s.lexSmallestAfterDeletion("z") == "z"
+    print("LC 3816 OK")
 
 
 if __name__ == "__main__":

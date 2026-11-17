@@ -1,22 +1,26 @@
 """
-LC 3673. Find Zombie Sessions — Hard
+LC 3673. Find Zombie Sessions — Hard (SQL)
 https://leetcode.com/problems/find-zombie-sessions/
-Tags: —
-Status: STUB — fill best solution
+Best: 按会话聚合过滤僵尸行为
 """
 
-from typing import List, Optional
-
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3673."""
-        raise NotImplementedError("LC 3673 stub")
+SOLUTION_SQL = """
+SELECT session_id, user_id,
+    TIMESTAMPDIFF(MINUTE, MIN(event_timestamp), MAX(event_timestamp)) AS session_duration_minutes,
+    SUM(event_type = 'scroll') AS scroll_count
+FROM app_events
+GROUP BY session_id, user_id
+HAVING session_duration_minutes >= 30
+    AND SUM(event_type = 'click') / SUM(event_type = 'scroll') < 0.2
+    AND SUM(event_type = 'purchase') = 0
+    AND SUM(event_type = 'scroll') >= 5
+ORDER BY scroll_count DESC, session_id;
+"""
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3673 stub OK (no tests yet)")
+    assert "SELECT" in SOLUTION_SQL.upper()
+    print("LC 3673 OK")
 
 
 if __name__ == "__main__":

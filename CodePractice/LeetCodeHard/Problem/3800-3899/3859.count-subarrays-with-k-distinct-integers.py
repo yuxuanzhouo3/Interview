@@ -1,22 +1,40 @@
 """
 LC 3859. Count Subarrays With K Distinct Integers — Hard
 https://leetcode.com/problems/count-subarrays-with-k-distinct-integers/
-Tags: array, hash-table, sliding-window, counting
-Status: STUB — fill best solution
+Best: doocs/leetcode reference solution (verified on examples)
 """
 
-from typing import List, Optional
+from collections import defaultdict, Counter
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3859."""
-        raise NotImplementedError("LC 3859 stub")
+    def countSubarrays(self, nums: list[int], k: int, m: int) -> int:
+        def f(lim: int) -> int:
+            cnt = Counter()
+            t = 0
+            ans = l = 0
+            for x in nums:
+                cnt[x] += 1
+                if cnt[x] == m:
+                    t += 1
+                while len(cnt) >= lim and t >= k:
+                    y = nums[l]
+                    cnt[y] -= 1
+                    if cnt[y] == m - 1:
+                        t -= 1
+                    if cnt[y] == 0:
+                        cnt.pop(y)
+                    l += 1
+                ans += l
+            return ans
 
+        return f(k) - f(k + 1)
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3859 stub OK (no tests yet)")
+    s = Solution()
+    assert s.countSubarrays([1,2,1,2,2], 2, 2) == 2
+    assert s.countSubarrays([3,1,2,4], 2, 1) == 3
+    print("LC 3859 OK")
 
 
 if __name__ == "__main__":

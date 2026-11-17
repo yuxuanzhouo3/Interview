@@ -1,22 +1,24 @@
 """
-LC 2543. Check if Point Is Reachable — Hard
+LC 2543. Check if Point is Reachable — Hard
 https://leetcode.com/problems/check-if-point-is-reachable/
-Tags: math, number-theory, euclidean-algorithm, greatest-common-divisor
-Status: STUB — fill best solution
+Best: Backward / gcd only factor 2 — O(log)
 """
 
-from typing import List, Optional
+import math
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2543."""
-        raise NotImplementedError("LC 2543 stub")
+    def isReachable(self, targetX: int, targetY: int) -> bool:
+        g = math.gcd(targetX, targetY)
+        return g > 0 and (g & (g - 1)) == 0
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2543 stub OK (no tests yet)")
+    s = Solution()
+    assert s.isReachable(6, 9) is False
+    assert s.isReachable(4, 7) is True
+    assert s.isReachable(1, 1) is True
+    print("LC 2543 OK")
 
 
 if __name__ == "__main__":

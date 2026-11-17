@@ -1,22 +1,35 @@
 """
 LC 1542. Find Longest Awesome Substring — Hard
 https://leetcode.com/problems/find-longest-awesome-substring/
-Tags: hash-table, string, bit-manipulation
-Status: STUB — fill best solution
+Best: Bitmask prefix parity + first occurrence — O(n · 10)
 """
-
-from typing import List, Optional
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1542."""
-        raise NotImplementedError("LC 1542 stub")
+    def longestAwesome(self, s: str) -> int:
+        # mask of digit parity; palindrome after rearrange => at most one odd
+        first = {0: -1}
+        mask = 0
+        ans = 0
+        for i, ch in enumerate(s):
+            mask ^= 1 << (ord(ch) - 48)
+            if mask in first:
+                ans = max(ans, i - first[mask])
+            else:
+                first[mask] = i
+            for d in range(10):
+                m2 = mask ^ (1 << d)
+                if m2 in first:
+                    ans = max(ans, i - first[m2])
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1542 stub OK (no tests yet)")
+    s = Solution()
+    assert s.longestAwesome("3242415") == 5
+    assert s.longestAwesome("213123") == 6
+    assert s.longestAwesome("00") == 2
+    print("LC 1542 OK")
 
 
 if __name__ == "__main__":

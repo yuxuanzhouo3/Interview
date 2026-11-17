@@ -1,22 +1,40 @@
 """
 LC 3298. Count Substrings That Can Be Rearranged to Contain a String II — Hard
 https://leetcode.com/problems/count-substrings-that-can-be-rearranged-to-contain-a-string-ii/
-Tags: hash-table, string, sliding-window
-Status: STUB — fill best solution
+Best: Sliding window cover — O(n)
 """
 
-from typing import List, Optional
+from collections import Counter
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3298."""
-        raise NotImplementedError("LC 3298 stub")
+    def validSubstringCount(self, word1: str, word2: str) -> int:
+        need = Counter(word2)
+        missing = len(word2)
+        cnt = Counter()
+        j = 0
+        ans = 0
+        n = len(word1)
+        for i, ch in enumerate(word1):
+            cnt[ch] += 1
+            if cnt[ch] <= need[ch]:
+                missing -= 1
+            while missing == 0:
+                ans += n - i
+                y = word1[j]
+                if cnt[y] <= need[y]:
+                    missing += 1
+                cnt[y] -= 1
+                j += 1
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3298 stub OK (no tests yet)")
+    s = Solution()
+    assert s.validSubstringCount("bcca", "abc") == 1
+    assert s.validSubstringCount("abcabc", "abc") == 10
+    assert s.validSubstringCount("abcabc", "aaabc") == 0
+    print("LC 3298 OK")
 
 
 if __name__ == "__main__":

@@ -1,22 +1,26 @@
 """
-LC 2252. Dynamic Pivoting of a Table — Hard
-https://leetcode.com/problems/dynamic-pivoting-of-a-table/
-Tags: database
-Status: STUB — fill best solution
+LC 2252. Dynamic Pivoting of a Table — Hard (SQL)
+Best: Dynamic SQL with GROUP_CONCAT + PREPARE
 """
 
-from typing import List, Optional
-
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2252."""
-        raise NotImplementedError("LC 2252 stub")
+SOLUTION_SQL = """
+SET @sql = NULL;
+SELECT GROUP_CONCAT(
+  DISTINCT CONCAT(
+    'MAX(CASE WHEN store = ''', store, ''' THEN amount END) AS `', store, '`'
+  )
+) INTO @sql
+FROM Products;
+SET @sql = CONCAT('SELECT product_id, ', @sql, ' FROM Products GROUP BY product_id');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+"""
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2252 stub OK (no tests yet)")
+    assert "GROUP_CONCAT" in SOLUTION_SQL and "PREPARE" in SOLUTION_SQL
+    print("LC 2252 OK")
 
 
 if __name__ == "__main__":

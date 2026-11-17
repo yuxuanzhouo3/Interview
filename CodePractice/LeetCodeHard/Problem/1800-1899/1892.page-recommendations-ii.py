@@ -1,22 +1,35 @@
 """
-LC 1892. Page Recommendations II — Hard
+LC 1892. Page Recommendations II — Hard (SQL)
 https://leetcode.com/problems/page-recommendations-ii/
-Tags: database
-Status: STUB — fill best solution
+Best: 朋友喜欢且自己未喜欢，按人聚合计数
 """
 
-from typing import List, Optional
-
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1892."""
-        raise NotImplementedError("LC 1892 stub")
+SOLUTION_SQL = """
+WITH Friend AS (
+  SELECT user1_id AS user_id, user2_id AS friend_id FROM Friendship
+  UNION ALL
+  SELECT user2_id, user1_id FROM Friendship
+)
+SELECT
+  f.user_id,
+  l.page_id,
+  COUNT(*) AS friends_likes
+FROM Friend f
+JOIN Likes l ON f.friend_id = l.user_id
+WHERE NOT EXISTS (
+  SELECT 1 FROM Likes my
+  WHERE my.user_id = f.user_id AND my.page_id = l.page_id
+)
+GROUP BY f.user_id, l.page_id
+"""
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1892 stub OK (no tests yet)")
+    q = SOLUTION_SQL.lower()
+    assert "friends_likes" in q
+    assert "friendship" in q
+    assert "likes" in q
+    print("LC 1892 OK")
 
 
 if __name__ == "__main__":

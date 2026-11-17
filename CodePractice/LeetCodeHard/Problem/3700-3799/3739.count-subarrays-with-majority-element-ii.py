@@ -1,22 +1,49 @@
 """
 LC 3739. Count Subarrays With Majority Element II — Hard
 https://leetcode.com/problems/count-subarrays-with-majority-element-ii/
-Tags: array, hash-table, divide-and-conquer, segment-tree, merge-sort, prefix-sum
-Status: STUB — fill best solution
+Best: doocs/leetcode reference solution (verified on examples)
 """
 
-from typing import List, Optional
+
+class BinaryIndexedTree:
+    __slots__ = "n", "c"
+
+    def __init__(self, n: int):
+        self.n = n
+        self.c = [0] * (n + 1)
+
+    def update(self, x: int, delta: int) -> None:
+        while x <= self.n:
+            self.c[x] += delta
+            x += x & -x
+
+    def query(self, x: int) -> int:
+        s = 0
+        while x:
+            s += self.c[x]
+            x -= x & -x
+        return s
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3739."""
-        raise NotImplementedError("LC 3739 stub")
-
+    def countMajoritySubarrays(self, nums: list[int], target: int) -> int:
+        n = len(nums)
+        tree = BinaryIndexedTree(n * 2 + 1)
+        s = n + 1
+        tree.update(s, 1)
+        ans = 0
+        for x in nums:
+            s += 1 if x == target else -1
+            ans += tree.query(s - 1)
+            tree.update(s, 1)
+        return ans
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3739 stub OK (no tests yet)")
+    s = Solution()
+    assert s.countMajoritySubarrays([1,2,2,3], 2) == 5
+    assert s.countMajoritySubarrays([1,1,1,1], 1) == 10
+    assert s.countMajoritySubarrays([1,2,3], 4) == 0
+    print("LC 3739 OK")
 
 
 if __name__ == "__main__":

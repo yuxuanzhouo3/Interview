@@ -1,22 +1,37 @@
 """
 LC 3836. Maximum Score Using Exactly K Pairs — Hard
 https://leetcode.com/problems/maximum-score-using-exactly-k-pairs/
-Tags: array, dynamic-programming
-Status: STUB — fill best solution
+Best: doocs/leetcode reference solution (verified on examples)
 """
 
-from typing import List, Optional
+from math import inf
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3836."""
-        raise NotImplementedError("LC 3836 stub")
-
+    def maxScore(self, nums1: list[int], nums2: list[int], K: int) -> int:
+        n, m = len(nums1), len(nums2)
+        f = [[[-inf] * (K + 1) for _ in range(m + 1)] for _ in range(n + 1)]
+        f[0][0][0] = 0
+        for i in range(n + 1):
+            for j in range(m + 1):
+                for k in range(K + 1):
+                    if i > 0:
+                        f[i][j][k] = max(f[i][j][k], f[i - 1][j][k])
+                    if j > 0:
+                        f[i][j][k] = max(f[i][j][k], f[i][j - 1][k])
+                    if i > 0 and j > 0 and k > 0:
+                        f[i][j][k] = max(
+                            f[i][j][k],
+                            f[i - 1][j - 1][k - 1] + nums1[i - 1] * nums2[j - 1],
+                        )
+        return f[n][m][K]
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3836 stub OK (no tests yet)")
+    s = Solution()
+    assert s.maxScore([1,3,2], [4,5,1], 2) == 22
+    assert s.maxScore([-2,0,5], [-3,4,-1,2], 2) == 26
+    assert s.maxScore([-3,-2], [1,2], 2) == -7
+    print("LC 3836 OK")
 
 
 if __name__ == "__main__":

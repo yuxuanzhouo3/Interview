@@ -1,22 +1,35 @@
 """
 LC 1383. Maximum Performance of a Team — Hard
 https://leetcode.com/problems/maximum-performance-of-a-team/
-Tags: array, greedy, sorting, heap-priority-queue
-Status: STUB — fill best solution
+Best: Sort by efficiency + min-heap on speed — O(n log n)
 """
 
-from typing import List, Optional
+import heapq
+from typing import List
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1383."""
-        raise NotImplementedError("LC 1383 stub")
+    def maxPerformance(self, n: int, speed: List[int], efficiency: List[int], k: int) -> int:
+        MOD = 10**9 + 7
+        people = sorted(zip(efficiency, speed), reverse=True)
+        heap = []
+        spd_sum = 0
+        ans = 0
+        for eff, spd in people:
+            heapq.heappush(heap, spd)
+            spd_sum += spd
+            if len(heap) > k:
+                spd_sum -= heapq.heappop(heap)
+            ans = max(ans, spd_sum * eff)
+        return ans % MOD
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1383 stub OK (no tests yet)")
+    s = Solution()
+    assert s.maxPerformance(6, [2, 10, 3, 1, 5, 8], [5, 4, 3, 9, 7, 2], 2) == 60
+    assert s.maxPerformance(6, [2, 10, 3, 1, 5, 8], [5, 4, 3, 9, 7, 2], 3) == 68
+    assert s.maxPerformance(6, [2, 10, 3, 1, 5, 8], [5, 4, 3, 9, 7, 2], 4) == 72
+    print("LC 1383 OK")
 
 
 if __name__ == "__main__":

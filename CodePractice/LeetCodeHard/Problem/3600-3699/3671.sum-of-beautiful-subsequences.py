@@ -1,23 +1,91 @@
 """
 LC 3671. Sum of Beautiful Subsequences — Hard
 https://leetcode.com/problems/sum-of-beautiful-subsequences/
-Tags: array, math, binary-indexed-tree, number-theory
-Status: STUB — fill best solution
+Tags: Array, Math, Binary Indexed Tree, Number Theory
+Best: 最优解
 """
+from functools import reduce
 
-from typing import List, Optional
+# Time:  precompute: O(rlogr), r = max_nums
+#        runtime:    O(mx + nlogr * (log(nlogr) + logn)), mx = max(nums)
+# Space: O(rlogr)
+
+# number theory, bit, fenwick tree
+MOD = 10**9+7
+class BIT:  # 0-indexed.
+    def __init__(self, n):
+        self.__bit = [0]*(n+1)  # Extra one for dummy node.
+
+    def add(self, i, val):
+        i += 1  # Extra one for dummy node.
+        while i < len(self.__bit):
+            self.__bit[i] = (self.__bit[i]+val) % MOD
+            i += (i & -i)
+
+    def query(self, i):
+        i += 1  # Extra one for dummy node.
+        ret = 0
+        while i > 0:
+            ret = (ret+self.__bit[i]) % MOD
+            i -= (i & -i)
+        return ret
 
 
+def factors(n):  # Time: O(nlogn)
+    result = [[] for _ in range(n+1)]
+    for i in range(1, n+1):
+        for j in range(i, n+1, i):
+            result[j].append(i)
+    return result
+
+
+def phi_sieve(n):  # Time: O(nlog(logn))
+    phi = list(range(n+1))
+    for i in range(2, n+1):
+        if phi[i] != i:
+            continue
+        for j in range(i, n+1, i):
+            phi[j] -= phi[j]//i
+    return phi
+
+
+MAX_NUM = 7 * 10**4
+FACTORS = factors(MAX_NUM)
+PHI = phi_sieve(MAX_NUM)
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3671."""
-        raise NotImplementedError("LC 3671 stub")
+    def totalBeauty(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        def count(arr):
+            for i, x in enumerate(sorted(arr)):  # coordinate compression
+                val_to_idx[x] = i
+            bit = BIT(len(arr))
+            for x in arr:
+                bit.add(val_to_idx[x], bit.query(val_to_idx[x]-1)+1)
+            return bit.query(len(arr)-1)
+
+        mx = max(nums)
+        val_to_idx = [0]*(mx+1)
+        lookup = [[] for _ in range(mx+1)]
+        for x in nums:
+            for d in FACTORS[x]:
+                lookup[d].append(x)
+        return reduce(lambda accu, x: (accu+x)%MOD, (PHI[g]*count(lookup[g]) for g in reversed(range(1, mx+1))), 0)
+
+
+# Time:  precompute: O(rlogr), r = max_nums
+#        runtime:    O(mx * log(mx) + nlogr * (log(nlogr) + logn)), mx = max(nums)
+# Space: O(rlogr)
+# number theory, bit, fenwick tree
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3671 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.totalBeauty(nums=[1, 2, 3]) == 10
+    assert s.totalBeauty(nums=[4, 6]) == 12
+    print("LC 3671 OK")
 
 if __name__ == "__main__":
     _test()

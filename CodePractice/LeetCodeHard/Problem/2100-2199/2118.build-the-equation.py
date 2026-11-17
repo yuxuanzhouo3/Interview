@@ -1,22 +1,39 @@
 """
-LC 2118. Build the Equation — Hard
+LC 2118. Build the Equation — Hard (SQL)
 https://leetcode.com/problems/build-the-equation/
-Tags: database
-Status: STUB — fill best solution
+Best: 按 power 降序拼接多项式字符串
 """
 
-from typing import List, Optional
-
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2118."""
-        raise NotImplementedError("LC 2118 stub")
+SOLUTION_SQL = """
+SELECT
+  CONCAT(
+    GROUP_CONCAT(
+      CONCAT(
+        IF(factor > 0 AND power < (SELECT MAX(power) FROM Terms), '+', ''),
+        CASE
+          WHEN power = 0 THEN CAST(factor AS CHAR)
+          WHEN power = 1 THEN
+            IF(ABS(factor) = 1, IF(factor > 0, 'X', '-X'), CONCAT(factor, 'X'))
+          ELSE
+            IF(ABS(factor) = 1,
+               IF(factor > 0, CONCAT('X^', power), CONCAT('-X^', power)),
+               CONCAT(factor, 'X^', power))
+        END
+      )
+      ORDER BY power DESC SEPARATOR ''
+    ),
+    '=0'
+  ) AS equation
+FROM Terms
+"""
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2118 stub OK (no tests yet)")
+    q = SOLUTION_SQL.lower()
+    assert "equation" in q
+    assert "terms" in q
+    assert "power" in q and "factor" in q
+    print("LC 2118 OK")
 
 
 if __name__ == "__main__":

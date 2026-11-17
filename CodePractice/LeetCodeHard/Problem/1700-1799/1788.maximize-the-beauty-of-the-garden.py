@@ -1,22 +1,32 @@
 """
 LC 1788. Maximize the Beauty of the Garden — Hard
-https://leetcode.com/problems/maximize-the-beauty-of-the-garden/
-Tags: array, hash-table, greedy, prefix-sum
-Status: STUB — fill best solution
+Best: First occurrence + positive prefix — O(n)
 """
 
-from typing import List, Optional
+from typing import List
+from math import inf
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1788."""
-        raise NotImplementedError("LC 1788 stub")
+    def maximumBeauty(self, flowers: List[int]) -> int:
+        s = [0] * (len(flowers) + 1)
+        d = {}
+        ans = -inf
+        for i, v in enumerate(flowers):
+            if v in d:
+                ans = max(ans, s[i] - s[d[v] + 1] + v * 2)
+            else:
+                d[v] = i
+            s[i + 1] = s[i] + max(v, 0)
+        return int(ans)
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1788 stub OK (no tests yet)")
+    sol = Solution()
+    assert sol.maximumBeauty([1, 2, 3, 1, 2]) == 8
+    assert sol.maximumBeauty([100, 1, 1, -3, 1]) == 3
+    assert sol.maximumBeauty([-1, -2, 0, -1]) == -2
+    print("LC 1788 OK")
 
 
 if __name__ == "__main__":

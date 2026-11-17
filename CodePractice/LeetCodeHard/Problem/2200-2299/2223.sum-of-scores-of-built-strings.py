@@ -1,23 +1,33 @@
 """
 LC 2223. Sum of Scores of Built Strings — Hard
 https://leetcode.com/problems/sum-of-scores-of-built-strings/
-Tags: string, binary-search, rolling-hash, suffix-array, string-matching, hash-function, z-algorithm, knuth-morris-pratt-algorithm
-Status: STUB — fill best solution
+Best: Z-algorithm sum of LCP with prefix — O(n)
 """
-
-from typing import List, Optional
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 2223."""
-        raise NotImplementedError("LC 2223 stub")
+    def sumScores(self, s: str) -> int:
+        n = len(s)
+        z = [0] * n
+        l = r = 0
+        for i in range(1, n):
+            if i <= r:
+                z[i] = min(r - i + 1, z[i - l])
+            while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+                z[i] += 1
+            if i + z[i] - 1 > r:
+                l, r = i, i + z[i] - 1
+        z[0] = n
+        return sum(z)
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 2223 stub OK (no tests yet)")
+    s = Solution()
+    assert s.sumScores("babab") == 9
+    assert s.sumScores("azbazbzaz") == 14
+    print("LC 2223 OK")
 
 
 if __name__ == "__main__":
     _test()
+

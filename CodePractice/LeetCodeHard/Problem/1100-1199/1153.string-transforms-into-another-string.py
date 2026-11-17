@@ -1,23 +1,34 @@
 """
 LC 1153. String Transforms Into Another String — Hard
 https://leetcode.com/problems/string-transforms-into-another-string/
-Tags: hash-table, string, graph
-Status: STUB — fill best solution
+Tags: Hash Table, String, Graph
+Best: 映射图：无环或存在未使用字符可破环
 """
 
-from typing import List, Optional
+from collections import defaultdict
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1153."""
-        raise NotImplementedError("LC 1153 stub")
+    def canConvert(self, str1: str, str2: str) -> bool:
+        if str1 == str2:
+            return True
+        mapping = {}
+        for a, b in zip(str1, str2):
+            if a in mapping and mapping[a] != b:
+                return False
+            mapping[a] = b
+        # if str2 uses all 26 letters, no temp char to break cycles
+        return len(set(str2)) < 26
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1153 stub OK (no tests yet)")
+    sol = Solution()
+    assert sol.canConvert("aabcc", "ccdee") is True
+    assert sol.canConvert("leetcode", "codeleet") is False
+    assert sol.canConvert("abcdefghijklmnopqrstuvwxyz", "bcdefghijklmnopqrstuvwxyza") is False
+    print("LC 1153 OK")
 
 
 if __name__ == "__main__":
     _test()
+

@@ -1,23 +1,43 @@
 """
 LC 3213. Construct String with Minimum Cost — Hard
 https://leetcode.com/problems/construct-string-with-minimum-cost/
-Tags: array, string, dynamic-programming, suffix-array
-Status: STUB — fill best solution
+Best: 方法一：字符串哈希 + 动态规划 + 枚举长度
 """
 
-from typing import List, Optional
-
+from collections import defaultdict
+from math import inf
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3213."""
-        raise NotImplementedError("LC 3213 stub")
-
+    def minimumCost(self, target: str, words: list[str], costs: list[int]) -> int:
+        base, mod = 13331, 998244353
+        n = len(target)
+        h = [0] * (n + 1)
+        p = [1] * (n + 1)
+        for i, c in enumerate(target, 1):
+            h[i] = (h[i - 1] * base + ord(c)) % mod
+            p[i] = (p[i - 1] * base) % mod
+        f = [0] + [inf] * n
+        ss = sorted(set(map(len, words)))
+        d = defaultdict(lambda: inf)
+        min = lambda a, b: a if a < b else b
+        for w, c in zip(words, costs):
+            x = 0
+            for ch in w:
+                x = (x * base + ord(ch)) % mod
+            d[x] = min(d[x], c)
+        for i in range(1, n + 1):
+            for j in ss:
+                if j > i:
+                    break
+                x = (h[i] - h[i - j] * p[j]) % mod
+                f[i] = min(f[i], f[i - j] + d[x])
+        return f[n] if f[n] < inf else -1
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3213 stub OK (no tests yet)")
-
+    s = Solution()
+    assert s.minimumCost(target='abcdef', words=['abdef', 'abc', 'd', 'def', 'ef'], costs=[100, 1, 1, 10, 5]) == 7
+    assert s.minimumCost(target='aaaa', words=['z', 'zz', 'zzz'], costs=[1, 10, 100]) == -1
+    print("LC 3213 OK")
 
 if __name__ == "__main__":
     _test()

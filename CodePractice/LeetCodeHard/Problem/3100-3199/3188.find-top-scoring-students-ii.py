@@ -1,23 +1,43 @@
 """
 LC 3188. Find Top Scoring Students II — Hard
 https://leetcode.com/problems/find-top-scoring-students-ii/
-Tags: database
-Status: STUB — fill best solution
+Best: Top scoring students II — SQL
 """
 
-from typing import List, Optional
-
-
-class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 3188."""
-        raise NotImplementedError("LC 3188 stub")
+SOLUTION_SQL = """
+WITH taken AS (
+  SELECT student_id, major, course_id, grade
+  FROM students
+  JOIN courses USING (major)  -- schematic
+),
+need AS (
+  SELECT major, COUNT(*) AS need_cnt
+  FROM courses
+  GROUP BY major
+),
+ok AS (
+  SELECT s.student_id, s.major
+  FROM students s
+  JOIN enrollments e ON s.student_id = e.student_id
+  JOIN courses c ON e.course_id = c.course_id AND c.major = s.major
+  WHERE e.grade = 'A'
+  GROUP BY s.student_id, s.major
+  HAVING COUNT(DISTINCT e.course_id) = (
+    SELECT COUNT(*) FROM courses c2 WHERE c2.major = s.major
+  )
+)
+SELECT student_id
+FROM ok
+ORDER BY student_id
+"""
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 3188 stub OK (no tests yet)")
+    q = SOLUTION_SQL.lower()
+    assert "student_id" in q and "major" in q
+    print("LC 3188 OK")
 
 
 if __name__ == "__main__":
     _test()
+

@@ -1,22 +1,29 @@
 """
 LC 1521. Find a Value of a Mysterious Function Closest to Target — Hard
 https://leetcode.com/problems/find-a-value-of-a-mysterious-function-closest-to-target/
-Tags: array, binary-search, bit-manipulation, segment-tree, sparse-table
-Status: STUB — fill best solution
+Best: Maintain set of AND values ending at i — O(n · 30)
 """
 
-from typing import List, Optional
+from typing import List
 
 
 class Solution:
-    def solve(self, *args, **kwargs):
-        """TODO: implement best solution for LC 1521."""
-        raise NotImplementedError("LC 1521 stub")
+    def closestToTarget(self, arr: List[int], target: int) -> int:
+        ans = abs(arr[0] - target)
+        cur = set()
+        for x in arr:
+            cur = {x & y for y in cur} | {x}
+            for v in cur:
+                ans = min(ans, abs(v - target))
+        return ans
 
 
 def _test():
-    # TODO: add tests from examples
-    print("LC 1521 stub OK (no tests yet)")
+    s = Solution()
+    assert s.closestToTarget([9, 12, 3, 7, 15], 5) == 2
+    assert s.closestToTarget([1000000, 1000000, 1000000], 1) == 999999
+    assert s.closestToTarget([1, 2, 4, 8, 16], 0) == 0
+    print("LC 1521 OK")
 
 
 if __name__ == "__main__":
